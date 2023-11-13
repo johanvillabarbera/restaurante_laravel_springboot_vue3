@@ -1,0 +1,79 @@
+version: "3"
+services:
+  db:
+    image: mysql:5.7
+    container_name: poliservaDB
+    command: mysqld --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
+    ports:
+      - "35000:3306"
+    env_file: .env
+    restart: always
+    volumes:
+      - ./backend/db/iniDB.sql:/docker-entrypoint-initdb.d/initDB.sql
+      - poliserva_mysql_data:/var/lib/mysql
+    networks:
+      poliserva: 
+        ipv4_address: 172.29.0.10
+
+  backend-laravel:
+    build: 
+      context: ./backend/
+      dockerfile: ./laravel/Dockerfile
+    container_name: poliservaLARAVEL
+    command: sh -c './wait-for-it.sh db:3306; ./migrate.sh; php artisan serve --host=0.0.0.0 --port=4000'
+    ports:
+      - "4000:4000"
+    depends_on:
+      - db
+    volumes:
+      - ./backend/laravel:/app/laravel
+      - poliserva_laravel_uploads:/app/laravel/public/uploads
+      - ./backend/db/migrate.sh:/app/laravel/migrate.sh
+    networks:
+      poliserva: 
+        ipv4_address: 172.29.0.11
+
+  springboot:
+    build:
+      context: ./backend/sboot
+    container_name: poliservaSPRING
+    ports:
+      - "7800:7800"
+    volumes:
+      - ./backend/sboot:/app
+      - ./backend/sboot/target:/app/target 
+      - maven-repo:/root/.m2
+    depends_on:
+      - db
+    networks:
+      poliserva: 
+        ipv4_address: 172.29.0.12
+
+  frontend-vue:
+    image: node:18.18
+    container_name: poliservaVUE
+    command: npm run dev
+    working_dir: /app
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./frontend:/app
+    depends_on:
+      - db
+      - backend-laravel
+    networks:
+      poliserva: 
+        ipv4_address: 172.29.0.13
+
+networks:
+  poliserva:
+    ipam:
+      driver: default
+      config:
+        - subnet: 172.29.0.0/24
+          gateway: 172.29.0.1
+
+volumes:
+  poliserva_mysql_data:
+  poliserva_laravel_uploads:
+  maven-repo:
