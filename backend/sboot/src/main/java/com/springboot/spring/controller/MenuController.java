@@ -1,7 +1,7 @@
 package com.springboot.spring.controller;
 
-import com.springboot.spring.model.Tables;
-import com.springboot.spring.repository.TableRepository;
+import com.springboot.spring.model.Menu;
+import com.springboot.spring.repository.MenuRepository;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -19,43 +19,31 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-@CrossOrigin(origins = "http://bellidel.eu:8000")
+@CrossOrigin(origins = "*")
 @RestController
-@RequestMapping("/tables")
-public class TableController {
+@RequestMapping("/menus")
+public class MenuController {
 
     @Autowired
-    TableRepository tableRepository;
+    MenuRepository menuRepository;
     
-    // List of tables
+    // List of menus
     @GetMapping("")
-    public ResponseEntity<List<Tables>> getAllTables() {
+    public ResponseEntity<List<Menu>> getAllMenus() {
         try {
-            List<Tables> tables = new ArrayList<Tables>();
+            
+            List<Menu> menus = new ArrayList<Menu>();
 
-            tableRepository.findAll().forEach(tables::add);
+            menuRepository.findAll().forEach(menus::add);
 
-            if (tables.isEmpty()) {
+            if (menus.isEmpty()) {
                 return new ResponseEntity<>(HttpStatus.NO_CONTENT);
             }
 
-            return new ResponseEntity<>(tables, HttpStatus.OK);
+            return new ResponseEntity<>(menus, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-
-    // List One Table By Id
-    @GetMapping("/{id}")
-    public ResponseEntity<Tables> getTableById(@PathVariable("id") long id) {
-        Optional<Tables> tableData = tableRepository.findById(id);
-
-        if (tableData.isPresent()) {
-            return new ResponseEntity<>(tableData.get(), HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-    }
-
 
 }

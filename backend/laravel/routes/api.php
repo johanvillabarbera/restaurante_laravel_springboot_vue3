@@ -18,5 +18,7 @@ use App\Http\Controllers\TablesController;
 // Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 //     return $request->user();
 // });
-
-Route::resource('tables', TablesController::class);
+Route::group(['middleware' => ['cors']], function () {
+    //Rutas a las que se permitirá acceso
+    Route::resource('tables', TablesController::class);
+});

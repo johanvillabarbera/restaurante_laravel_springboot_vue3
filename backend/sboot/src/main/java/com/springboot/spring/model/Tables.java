@@ -8,9 +8,17 @@ import lombok.Data;
 @Table(name = "tables")
 public class Tables {
 	@Id
-	//@GeneratedValue(strategy = GenerationType.IDENTITY)
+	//@GeneratedValue(strategy = GenerationType.AUTO)
+	
+	@Column(name = "tableID")
 	private Long tableID;
+	
+	@Column(name = "capacity")
+    private Integer capacity;
+
+	@Column(name = "location")
 	private String location;
-    private int capacity;
-    private int availability;
+	
+	@Column(name = "availability")
+    private Integer availability;
 }

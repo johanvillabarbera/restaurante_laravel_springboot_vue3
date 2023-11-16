@@ -74,5 +74,15 @@ class TablesController extends Controller
     public function destroy(string $id)
     {
         //
+        $delete = Tables::where('tableID', $id)->delete();
+        if ($delete == 1){
+            return response()->json([
+                "Message" => "Deleted correctly"
+            ]);
+        } else {
+            return response()->json([
+                "Status" => "Not found"
+            ], 404);
+        }
     }
 }
