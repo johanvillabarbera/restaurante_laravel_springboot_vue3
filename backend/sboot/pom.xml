@@ -59,6 +59,11 @@
 			<version>1.18.22</version> 
 			<optional>true</optional>
 		</dependency>
+	<!-- DEPENDENCIAS WEB SOCKET -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-websocket</artifactId>
+		</dependency>
 
 	</dependencies>
 
