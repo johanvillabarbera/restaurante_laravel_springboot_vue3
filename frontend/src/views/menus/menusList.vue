@@ -1,10 +1,13 @@
 <template>
-    <h3>que pasaaaaa</h3>
-
-    <li v-for="item in state.menus">
+    <section class="menu_list">
+        <h2>Menus</h2>
+        <div class="load_menus">
+            <MenuCard :data="state.menus"/>
+        </div>
+    </section>
+    <!-- <li v-for="item in state.menus">
         <p>{{ item.menuID }} || {{ item.name }} || {{ item.description }} || {{ item.price }}</p>
-    </li>
-    <MenuCard></MenuCard>
+    </li> -->
 </template>
 
 <script setup>
@@ -21,3 +24,22 @@ import { computed, reactive } from 'vue';
     });
 
 </script>
+
+<style lang="css">
+
+    .menu_list h2 {
+        font-size: 3em;
+        font-weight: 600;
+        text-align: center;
+        color: #ffffff;
+    }
+    .load_menus {
+        width: 100%;
+        height: auto;
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: space-evenly;
+    }
+
+</style>

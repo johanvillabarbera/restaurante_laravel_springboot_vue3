@@ -14,7 +14,7 @@
   -webkit-text-size-adjust: 100%;
 }
 
-a {
+/* a {
   font-weight: 500;
   color: #646cff;
   text-decoration: inherit;
@@ -86,4 +86,9 @@ button:focus-visible {
   button {
     background-color: #f9f9f9;
   }
+} */
+
+* {
+  margin: 0px;
+  padding: 0px;
 }

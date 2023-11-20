@@ -8,8 +8,7 @@ import lombok.Data;
 @Table(name = "menus")
 public class Menu {
 	@Id
-	//@GeneratedValue(strategy = GenerationType.AUTO)
-	
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "menuID")
 	private Long menuID;
 	
