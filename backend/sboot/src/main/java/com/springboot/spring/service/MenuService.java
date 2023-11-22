@@ -4,10 +4,8 @@ import com.springboot.spring.model.Menu;
 import com.springboot.spring.repository.MenuRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.socket.TextMessage;
-import org.springframework.web.socket.WebSocketSession;
-// import org.springframework.messaging.simp.SimpMessagingTemplate;
-
+import org.springframework.messaging.simp.SimpMessagingTemplate;
+//import org.springboot.spring.config.WebSocketConfig;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -16,6 +14,9 @@ import java.util.List;
 public class MenuService {
 
     private final MenuRepository menuRepository;
+
+    @Autowired
+    private SimpMessagingTemplate template;
 
     @Autowired
     public MenuService(MenuRepository menuRepository) {
@@ -32,10 +33,11 @@ public class MenuService {
 
     public Menu createMenu(Menu menu) {
         Menu savedMenu = menuRepository.save(menu);
+        template.convertAndSend("/topic", "Menú creado");
         return savedMenu;
     }
 
-    public Menu updateMenu(Long id, Menu updatedMenu) {
+    public Menu updateMenu(Long id, Menu updatedMenu, SimpMessagingTemplate template) {
         Menu existingMenu = menuRepository.findById(id).orElse(null);
         if (existingMenu != null) {
             existingMenu.setName(updatedMenu.getName());

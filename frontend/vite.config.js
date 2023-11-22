@@ -10,5 +10,15 @@ export default defineConfig({
     watch: {
       usePolling: true
     }
+  },
+  define: {
+    'global': 'window'
+  },
+  proxy: {
+    '/api': {
+      target: 'http://bellidel.eu:7800',
+      changeOrigin: true,
+      rewrite: (path) => path.replace(/^\/api/, '')
+    }
   }
 })
