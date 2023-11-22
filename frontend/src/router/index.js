@@ -13,6 +13,11 @@ const router = createRouter({
       component: () => import('../views/pages/Home.vue')
     },
     {
+      path: "/reservation",
+      name: "reservation",
+      component: () => import('../views/pages/Reservation.vue')
+    },
+    {
       path: "/dashboard",
       name: "dashboard",
       component: () => import('../views/pages/Dashboard.vue')
@@ -20,7 +25,7 @@ const router = createRouter({
     {
       path: "/dashboard/tables",
       name: "tables",
-      component: () => import('../views/tables/tablesList.vue')
+      component: () => import('../views/tables/DashboardTables.vue')
     },
   ]
 })

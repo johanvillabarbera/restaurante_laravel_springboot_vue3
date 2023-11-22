@@ -1,5 +1,5 @@
 <template>
-    <section class="sidebar_menu">
+    <div class="sidebar_menu">
         <h2>Dashboard</h2>
         <ul>
             <router-link to="/dashboard" :class="{ active: isDashboard }">
@@ -11,7 +11,7 @@
             <li>Menus</li>
             <li>Item 4</li>
         </ul>
-    </section>
+    </div>
 </template>
 
 <script setup>
@@ -24,6 +24,7 @@
     }
     
     .sidebar_menu {
+        position: fixed;
         background-color: #000000;
         width: 10vw;
         height: 100vh;

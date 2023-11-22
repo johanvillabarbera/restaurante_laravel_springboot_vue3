@@ -3,16 +3,6 @@ import clientMenuService from '../../../services/client/menusService';
 import SockJS from 'sockjs-client';
 import Stomp from 'webstomp-client';
 
-// import VueSocketIO from 'vue-socket.io';
-
-// const socketOptions = {
-//     debug: true,
-//     connection: 'http://bellidel.eu:7800/api/websocket-endpoint',
-//   };
-  
-
-//   const socket = new VueSocketIO(socketOptions);
-
 
 export const menu = {
     state: {
@@ -31,15 +21,18 @@ export const menu = {
                 console.error(error);
             }
         },
-        [clientConstant.CONNECT_WEBSOCKET]: ({ commit, state }) => {
+        [clientConstant.CONNECT_WEBSOCKET]: ({ commit, state, dispatch }) => {
             const socket = new SockJS('http://bellidel.eu:7800/api/websocket-endpoint');
             state.stompClient = Stomp.over(socket);
 
             state.stompClient.connect({}, () => {
-                // Suscribirse a un tema específico
                 state.stompClient.subscribe('/topic', message => {
-                    console.log(message.body);
-                    commit(clientConstant.RECEIVE_MESSAGE, message.body);
+                    if(message.body === "Menú creado") {
+                        dispatch(clientConstant.INITIALIZE_MENU);
+                        //self.dispatch(clientConstant.INITIALIZE_MENU);
+                        // VOLVER A LLAMAR A LA FUNCION PARA REALIZAR UNA PETIICON Y OBTENER LOS MENUS
+                    }
+                    //commit(clientConstant.RECEIVE_MESSAGE, message.body);
                 });
             }, error => {
                 console.error('Error en la conexión WebSocket:', error);

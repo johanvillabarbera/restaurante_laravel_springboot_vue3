@@ -30,7 +30,6 @@ class TablesController extends Controller
      */
     public function store(StoreTablesRequest $request)
     {
-        //
         return TablesResource::make(Tables::create($request->validated()));
     }
 
