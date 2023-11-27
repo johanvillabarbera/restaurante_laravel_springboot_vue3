@@ -8,8 +8,8 @@
             <router-link to="/dashboard" class="link" :class="{ active: isDashboard }">
                 <li><span>Dashboard</span></li>
             </router-link>
-            <router-link to="/develop" class="link">
-                <li><span>Develop</span></li>
+            <router-link to="/reservation" class="link">
+                <li><span>Reservas</span></li>
             </router-link>
             <router-link to="/develop" class="link">
                 <li><span>Develop</span></li>

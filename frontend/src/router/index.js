@@ -18,6 +18,11 @@ const router = createRouter({
       component: () => import('../views/pages/Reservation.vue')
     },
     {
+      path: "/reservation/:filters",
+      name: "reservationFilters",
+      component: () => import('../views/pages/Reservation.vue')
+    },
+    {
       path: "/dashboard",
       name: "dashboard",
       component: () => import('../views/pages/Dashboard.vue')
@@ -26,6 +31,31 @@ const router = createRouter({
       path: "/dashboard/tables",
       name: "tables",
       component: () => import('../views/tables/DashboardTables.vue')
+    },
+    {
+      path: "/dashboard/tables/create",
+      name: "tablesCreate",
+      component: () => import('../views/tables/createTables.vue')
+    },
+    {
+      path: "/dashboard/tables/update",
+      name: "tablesUpdate",
+      component: () => import('../views/tables/updateTables.vue')
+    },
+    {
+      path: "/dashboard/menus",
+      name: "menus",
+      component: () => import('../views/menus/DashboardMenus.vue')
+    },
+    {
+      path: "/dashboard/menus/create",
+      name: "menusCreate",
+      component: () => import('../views/menus/createMenus.vue')
+    },
+    {
+      path: "/dashboard/menus/update",
+      name: "menusUpdate",
+      component: () => import('../views/menus/updateMenus.vue')
     },
   ]
 })

@@ -1,9 +1,10 @@
 <template>
+
   <div class="q-pa-md">
     <q-layout view="hHh Lpr lff" container style="height: 100vh">
       <q-header elevated :class="$q.dark.isActive ? 'bg-secondary' : 'bg-black'">
         <q-toolbar>
-          <q-toolbar-title>Dashboard Tables</q-toolbar-title>
+          <q-toolbar-title>Dashboard Menus</q-toolbar-title>
         </q-toolbar>
       </q-header>
 
@@ -12,49 +13,47 @@
       <q-page-container>
         <q-page padding>
           <!-- Contenido -->
-          <gridTables v-if="state.tables" :data="state.tables" />
-          <gridSkeleton v-else />
+          <gridMenus v-if="state.menus && state.menus.length > 0"  :data="state.menus"/>
         </q-page>
       </q-page-container>
     </q-layout>
   </div>
+
 </template>
- 
+
 <script setup>
 
   import Sidebar from '../../components/dashboard/Sidebar.vue';
-  import { ref } from 'vue'
+  import gridMenus from '../../components/dashboard/gridMenus.vue';
+  import { ref } from 'vue';
   import { useStore } from 'vuex';
-  import adminConstant from '../../store/modules/admin/adminConstant'
   import { computed, reactive } from 'vue';
-  import gridTables from '../../components/dashboard/gridTables.vue';
-  import gridSkeleton from '../../components/dashboard/gridSkeleton.vue';
-
+  import adminConstant from '../../store/modules/admin/adminConstant';
+  
   const drawer = ref(false);
   const store = useStore();
 
-  store.dispatch(`tables/${adminConstant.INITIALIZE_TABLES}`);
+  store.dispatch(`menus/${adminConstant.INITIALIZE_MENUS}`);
 
   const state = reactive({
-    tables: computed(() => store.getters['tables/GetTables'])
+    menus: computed(() => store.getters['menus/GetMenus'])
   });
 
-  console.log(state.tables);
-
-
 </script>
- 
+
 <style lang="css">
-  body {
-    margin: 0px;
-    padding: 0px;
-  }
 
-  .header {
-    display: none;
-  }
+    body {
+        margin: 0px;
+        padding: 0px;
+    }
 
-  .q-pa-md {
-    padding: 0px;
-  }
+    .header {
+        display: none;
+    }
+
+    .q-pa-md {
+        padding: 0px;
+    }
+
 </style>

@@ -1,64 +1,85 @@
 <template>
-    <div class="sidebar_menu">
-        <h2>Dashboard</h2>
-        <ul>
-            <router-link to="/dashboard" :class="{ active: isDashboard }">
-                <li>Dashboard</li>
-            </router-link>
-            <router-link to="/dashboard/tables" :class="{ active: isDashboardTables }">
-                <li>Mesas</li>
-            </router-link>
-            <li>Menus</li>
-            <li>Item 4</li>
-        </ul>
-    </div>
-</template>
 
+<q-drawer
+        v-model="drawer"
+        show-if-above
+        :width="200"
+        :breakpoint="500"
+        bordered
+        :class="$q.dark.isActive ? 'bg-grey-9' : 'bg-grey-3'"
+      >
+        <q-scroll-area class="fit">
+          <q-list>
+
+            <template v-for="(menuItem, index) in menuList" :key="index">
+              <q-item clickable :active="menuItem.label === 'Outbox'" v-ripple>
+                <q-item-section avatar>
+                  <q-icon :name="menuItem.icon" />
+                </q-item-section>
+                <q-item-section>
+                  <router-link :to="menuItem.routerLink" style="text-decoration: none; color: inherit;">
+                    <q-item-label>{{ menuItem.label }}</q-item-label>
+                  </router-link>
+                </q-item-section>
+              </q-item>
+              <q-separator :key="'sep' + index"  v-if="menuItem.separator" />
+            </template>
+
+          </q-list>
+        </q-scroll-area>
+      </q-drawer>
+
+</template>
 <script setup>
 
+
+    const menuList = [
+  {
+    icon: 'inbox',
+    label: 'Dashboard',
+    separator: true,
+    routerLink: '/dashboard'
+  },
+  {
+    icon: 'send',
+    label: 'Tables',
+    separator: false,
+    routerLink: '/dashboard/tables'
+  },
+  {
+    icon: 'delete',
+    label: 'Menus',
+    separator: false,
+    routerLink: '/dashboard/menus'
+  },
+  {
+    icon: 'error',
+    label: 'Spam',
+    separator: true,
+    routerLink: '/home'
+  },
+  {
+    icon: 'settings',
+    label: 'Settings',
+    separator: false,
+    routerLink: '/home'
+  },
+  {
+    icon: 'feedback',
+    label: 'Send Feedback',
+    separator: false,
+    routerLink: '/home'
+  },
+  {
+    icon: 'help',
+    iconColor: 'primary',
+    label: 'Help',
+    separator: false,
+    routerLink: '/home'
+  }
+]
 </script>
 
 <style lang="css">
-    .header {
-        display: none;
-    }
-    
-    .sidebar_menu {
-        position: fixed;
-        background-color: #000000;
-        width: 10vw;
-        height: 100vh;
-    }
-
-    .sidebar_menu h2 {
-        color: #ff764d;
-    }
-
-    .sidebar_menu ul {
-        list-style: none;
-        margin-top: 2vh;
-        text-align: left;
-        
-    }
-
-    .sidebar_menu ul li {
-        margin: 0px;
-        /* border: #ff764d solid 1px;
-        border-radius: 5px; */
-        padding-left: 2vw;
-        margin-top: 1vh;
-    }
-
-    .sidebar_menu ul li:hover {
-        background-color: #ff764d;
-        color: #000000;
-        cursor: pointer;
-    }
-
-    .sidebar_menu ul router-link {
-        text-decoration: none;
-    }
-
-
 
 </style>

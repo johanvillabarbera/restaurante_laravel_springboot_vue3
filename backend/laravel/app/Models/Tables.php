@@ -4,6 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use App\Models\Turns;
 
 class Tables extends Model
 {
@@ -19,4 +21,8 @@ class Tables extends Model
         'availability',
     ];
 
+    public function turns(): BelongsToMany
+    {
+        return $this->belongsToMany(Turns::class, 'turns_tables', 'idtable', 'idturn');
+    }
 }

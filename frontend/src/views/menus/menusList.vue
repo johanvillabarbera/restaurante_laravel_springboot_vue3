@@ -1,8 +1,8 @@
 <template>
     <section class="menu_list">
-        <h2>Menus</h2>
+        <h2 class="text-deep-orange-6">Menus</h2>
         <div class="load_menus">
-            <MenuCard :data="state.menus"/>
+            <MenuCard :data="state.menus" @emitAction="emitAction"/>
         </div>
     </section>
     <!-- <li v-for="item in state.menus">
@@ -14,7 +14,7 @@
 import MenuCard from '../../components/menus/menuCard.vue'
 import { useStore } from 'vuex';
 import clientConstant from '../../store/modules/client/clientConstant'
-import { computed, reactive } from 'vue';
+import { computed, getCurrentInstance, reactive } from 'vue';
     const store = useStore();
 
     store.dispatch(`menu/${clientConstant.INITIALIZE_MENU}`);
@@ -22,6 +22,11 @@ import { computed, reactive } from 'vue';
     const state = reactive({
         menus: computed(() => store.getters['menu/GetMenus'])
     });
+
+    const { emit } = getCurrentInstance();
+    const emitAction = (item) => {
+        emit('emitAction', item)
+    }
 
 </script>
 

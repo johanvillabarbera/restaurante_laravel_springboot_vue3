@@ -3,6 +3,8 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\TablesController;
+use App\Http\Controllers\TurnsController;
+use App\Http\Controllers\MenusController;
 
 /*
 |--------------------------------------------------------------------------
@@ -21,4 +23,7 @@ use App\Http\Controllers\TablesController;
 Route::group(['middleware' => ['cors']], function () {
     //Rutas a las que se permitirá acceso
     Route::resource('tables', TablesController::class);
+    Route::resource('turns', TurnsController::class);
+    Route::resource('menus', MenusController::class);
+    // Route::get('tables/static', [TablesController::class, 'index']);
 });
