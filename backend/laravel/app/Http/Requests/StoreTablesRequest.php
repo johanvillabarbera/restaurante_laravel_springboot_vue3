@@ -17,7 +17,7 @@ class StoreTablesRequest extends FormRequest
             'capacity' => 'required|integer|min:1',
             'location' => 'required|string',
             'availability' => 'required|integer|min:0|max:1',
-            'turns' => 'required', 'array:name,turns',
+            'turns' => 'array:name,turns',
         ];
     }
 }

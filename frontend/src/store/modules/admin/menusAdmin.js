@@ -1,5 +1,8 @@
 import adminConstant from './adminConstant';
 import adminMenusService from '../../../services/admin/menusService';
+// IMPORTAMOS EL SERVICIO PARA LANZAR LA PETICION QUE AVISARA A LOS USUARIOS MEDIANTE SPRINGBOOT
+import notifyClientsService from '../../../services/admin/notifyClientsService';
+
 
 export const menus = {
     state: {
@@ -32,7 +35,13 @@ export const menus = {
         [adminConstant.UPDATE_MENUS]: async (store, payload) => {
             try {
                 const response = await adminMenusService.UpdateMenus(payload);
-                store.commit(adminConstant.UPDATE_MENUS, response.data.data);
+                if (response.status === 200) {
+                    store.commit(adminConstant.UPDATE_MENUS, payload);
+                }
+
+                // AVISAMOS AL CLIENTE
+                notifyClientsService.GetNotifyMenus();
+                
             } catch (error) {
                 console.error(error);
             }
@@ -41,6 +50,22 @@ export const menus = {
             try {
                 const response = await adminMenusService.CreateMenus(payload);
                 store.commit(adminConstant.CREATE_MENU, response.data.data);
+                
+                // AVISAMOS AL CLIENTE
+                notifyClientsService.GetNotifyMenus();
+
+            } catch (error) {
+                console.error(error);
+            }
+        },
+        [adminConstant.DELETE_MENU]: async (store, payload) => {
+            try {
+                const response = await adminMenusService.DeleteMenu(payload);
+                if (response.status === 200) {
+                    store.commit(adminConstant.DELETE_MENU, payload);
+                    // AVISAMOS AL CLIENTE
+                    notifyClientsService.GetNotifyMenus();
+                }
             } catch (error) {
                 console.error(error);
             }
@@ -57,13 +82,19 @@ export const menus = {
         },
         [adminConstant.UPDATE_MENUS]: (state, payload) => {
             if (payload) {
-                state.menus.push(payload);
+                const index = (state.menus ?? []).findIndex(item => item.menuID == payload.menuID);
+                if (index !== -1) {
+                    state.menus[index] = payload;
+                }
             }
         },
         [adminConstant.CREATE_MENU]: (state, payload) => {
             if (payload) {
                 state.menus.push(payload);
             }
+        },
+        [adminConstant.DELETE_MENU]: (state, payload) => {
+            state.menus = state.menus.filter(menu => menu.menuID !== payload);
         }
     },
     getters: {

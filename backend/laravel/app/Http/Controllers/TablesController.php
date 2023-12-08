@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Tables;
+use App\Models\Turns;
 use App\Http\Resources\TablesResource;
 use App\Http\Requests\StoreTablesRequest;
 
@@ -55,8 +56,23 @@ class TablesController extends Controller
     public function update(StoreTablesRequest $request, string $id)
     {
         //
-        $update = Tables::where('tableID', $id)->update($request->validated());
+        $data = $request->except(['turns']);
+
+        if ($request->turns !== null) {
+            $turns_id = [];
+            foreach ($request->turns as $c) {
+                array_push($turns_id, $c['turnID']);
+            }
+        }
+
+        $update = Tables::where('tableID', $id)->update($data);
         if ($update == 1){
+            if (count($turns_id) > 0) {
+                $mesa = Tables::where('tableID', $id)->firstOrFail();
+                $mesa->turns()->detach();
+                $mesa->turns()->sync($turns_id);
+            }
+
             return response()->json([
                 "Message" => "Updated correctly"
             ]);
@@ -73,7 +89,11 @@ class TablesController extends Controller
     public function destroy(string $id)
     {
         //
+
+        $table = Tables::find($id);
         $delete = Tables::where('tableID', $id)->delete();
+
+        $table->turns()->detach();
         if ($delete == 1){
             return response()->json([
                 "Message" => "Deleted correctly"

@@ -3,24 +3,24 @@
         <h2>Mesa</h2>
 
         <q-form
-      @submit="emitAction(state.tableLocal)"
+      @submit="emitAction(table)"
       class="q-gutter-md"
     >
         <q-input
             filled
-            v-model="state.tableLocal.location"
+            v-model="table.location"
             label="Location"
         />
 
         <q-input
             filled
-            v-model="state.tableLocal.capacity"
+            v-model="table.capacity"
             label="Capacity"
         />
 
         <q-input
             filled
-            v-model="state.tableLocal.availability"
+            v-model="table.availability"
             label="Availability"
         />
 
@@ -42,19 +42,21 @@
 </template>
 
 <script setup>
-import { reactive, getCurrentInstance } from 'vue';
+import { computed, reactive, getCurrentInstance } from 'vue';
 import { useRouter } from 'vue-router';
     const { emit } = getCurrentInstance();
     const props = defineProps({
         data: Object
     });
 
-    const table_ = props.data ? props.data : { 'name': '' };
-    const state = reactive({
-            tableLocal: { ...table_ }
-    });
+    const dataTable = props.data ? props.data[0] ? props.data[0] : {} : {};
 
-    console.log(props.data);
+    const table = reactive({
+        location: '',
+        capacity: '',
+        availability: '',
+        ...dataTable
+    })
 
     const emitAction = (item) => {
         emit('emitAction', item)

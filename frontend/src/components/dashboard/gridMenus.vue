@@ -19,7 +19,7 @@
             color="primary"
             icon="edit"
             flat
-            @click="updateMenu(props.row)"
+            @click="updateMenu(props.row.menuID)"
           ></q-btn>
         </q-td>
       </template>
@@ -31,7 +31,10 @@
 <script setup>
 
 import { useRouter } from 'vue-router';
-
+import { useStore } from 'vuex';
+import adminConstant from '../../store/modules/admin/adminConstant';
+import { ref } from 'vue';
+const store = useStore();
 
 const columns = [
   { name: 'menuID', align: 'center', label: 'menuID', field: 'menuID', sortable: true },
@@ -45,7 +48,7 @@ const props = defineProps({
   data: Object
 });
 
-const rows = props.data;
+const rows = ref(props.data);
 
 const router = useRouter();
 
@@ -53,14 +56,19 @@ const redirects = {
   create: () => router.push({ name: 'menusCreate' })
 };
 
-const updateMenu = (row) => {
-  const menuID = row.menuID;
-  router.push({ name: 'menusUpdate', params: { menuID } });
+const updateMenu = (menuID) => {
+  // console.log(row);
+  // const menuID2 = row.menuID;
+  // console.log(menuID);
+  router.replace({ name: 'menusUpdate', params: { id: menuID } });
 }
 
 const deleteMenu = (row) => {
   const menuID = row.menuID;
-  console.log(menuID);
+  store.dispatch(`menus/${adminConstant.DELETE_MENU}`, menuID);
+  const NUM_ELEMENTOS_A_BORRAR = 1;
+  const menu_borrado_pos = rows.value.findIndex(item => item.menuID == menuID);
+  rows.value.splice(menu_borrado_pos, NUM_ELEMENTOS_A_BORRAR);
 }
 
 </script>

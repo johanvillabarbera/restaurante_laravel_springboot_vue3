@@ -1,6 +1,6 @@
 import adminConstant from './adminConstant';
 import adminTablesService from '../../../services/admin/tablesService';
-
+import notifyClientsService from '../../../services/admin/notifyClientsService';
 export const tables = {
     state: {
         menu: []
@@ -33,6 +33,8 @@ export const tables = {
             try {
                 const response = await adminTablesService.CreateTables(payload);
                 store.commit(adminConstant.CREATE_TABLES, response.data.data);
+
+                notifyClientsService.GetNotifyTables();
             } catch (error) {
                 console.error(error);
             }
@@ -40,7 +42,23 @@ export const tables = {
         [adminConstant.UPDATE_TABLES]: async (store, payload) => {
             try {
                 const response = await adminTablesService.UpdateTables(payload);
-                store.commit(adminConstant.UPDATE_TABLES, response.data.data);
+                if(response.status === 200){
+                    store.commit(adminConstant.UPDATE_TABLES, payload);
+                }
+
+                notifyClientsService.GetNotifyTables();
+            } catch (error) {
+                console.error(error);
+            }
+        },
+        [adminConstant.DELETE_TABLE]: async (store, payload) => {
+            try {
+                const response = await adminTablesService.DeleteTable(payload);
+                if (response.status === 200) {
+                    store.commit(adminConstant.DELETE_TABLE, payload);
+                    // AVISAMOS AL CLIENTE
+                    notifyClientsService.GetNotifyTables();
+                }
             } catch (error) {
                 console.error(error);
             }
@@ -62,8 +80,14 @@ export const tables = {
         },
         [adminConstant.UPDATE_TABLES]: (state, payload) => {
             if (payload) {
-                state.tables.push(payload);
+                const index = (state.tables ?? []).findIndex(item => item.tableID == payload.tableID);
+                if (index !== -1) {
+                    state.tables[index] = payload;
+                }
             }
+        },
+        [adminConstant.DELETE_TABLE]: (state, payload) => {
+            state.tables = state.tables.filter(table => table.tableID !== payload);
         }
     },
     getters: {

@@ -38,7 +38,7 @@ const router = createRouter({
       component: () => import('../views/tables/createTables.vue')
     },
     {
-      path: "/dashboard/tables/update",
+      path: "/dashboard/tables/update/:id",
       name: "tablesUpdate",
       component: () => import('../views/tables/updateTables.vue')
     },
@@ -53,7 +53,7 @@ const router = createRouter({
       component: () => import('../views/menus/createMenus.vue')
     },
     {
-      path: "/dashboard/menus/update",
+      path: "/dashboard/menus/update/:id",
       name: "menusUpdate",
       component: () => import('../views/menus/updateMenus.vue')
     },

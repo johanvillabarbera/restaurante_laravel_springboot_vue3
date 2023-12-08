@@ -70,6 +70,17 @@ class MenusController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $delete = Menus::where('menuID', $id)->delete();
+
+        if ($delete == 1) {
+            return response()->json([
+                "Message" => "Deleted Correctly"
+            ], 200);
+        
+        } else {
+            return response()->json([
+                "Status" => "Not Found"
+            ], 404);
+        }
     }
 }

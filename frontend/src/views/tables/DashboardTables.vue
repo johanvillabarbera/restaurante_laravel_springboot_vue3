@@ -21,7 +21,6 @@
 </template>
  
 <script setup>
-
   import Sidebar from '../../components/dashboard/Sidebar.vue';
   import { ref } from 'vue'
   import { useStore } from 'vuex';
@@ -35,9 +34,9 @@
 
   store.dispatch(`tables/${adminConstant.INITIALIZE_TABLES}`);
 
-  const state = reactive({
+  const state = ref(reactive({
     tables: computed(() => store.getters['tables/GetTables'])
-  });
+  }));
 
   console.log(state.tables);
 

@@ -30,6 +30,11 @@
 
 <script setup>
   import { useRouter } from 'vue-router';
+  import { useStore } from 'vuex';
+import adminConstant from '../../store/modules/admin/adminConstant';
+import { ref } from 'vue';
+
+  const store = useStore();
 
     const columns = [
     { name: 'tableID', align: 'center', label: 'tableID', field: 'tableID', sortable: true },
@@ -49,16 +54,19 @@
         data: Object
     });
 
+    const rows = ref(props.data); 
+
     const updateTable = (row) => {
       const tableID = row.tableID
-      router.push({ name: 'tablesUpdate', params: { tableID } })
+      console.log(tableID);
+      router.push({ name: 'tablesUpdate', params: { id: tableID } })
     };
 
-    const deleteTable = (row) => {
-      console.log('Eliminar fila:', row);
-      // Aquí lógica para eliminar la fila
+    const deleteTable = async (row) => {
+      const tableID = row.tableID;
+      await store.dispatch(`tables/${adminConstant.DELETE_TABLE}`, tableID);
+      const NUM_ELEMENTOS_A_BORRAR = 1;
+      const menu_borrado_pos = rows.value.findIndex(item => item.tableID == tableID);
+      rows.value.splice(menu_borrado_pos, NUM_ELEMENTOS_A_BORRAR);
     };
-    
-    const rows = props.data; 
-
 </script>

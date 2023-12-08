@@ -3,25 +3,25 @@
         <h2>Menu</h2>
 
         <q-form
-      @submit="emitAction(state.menuLocal)"
+      @submit="emitAction(menu)"
       class="q-gutter-md"
     >
         <q-input
             filled
-            v-model="state.menuLocal.name"
-            label="Location"
+            v-model="menu.name"
+            label="Name"
         />
 
         <q-input
             filled
-            v-model="state.menuLocal.price"
-            label="Capacity"
+            v-model="menu.price"
+            label="Price"
         />
 
         <q-input
             filled
-            v-model="state.menuLocal.description"
-            label="Availability"
+            v-model="menu.description"
+            label="Description"
         />
 
       <div>
@@ -41,10 +41,14 @@ import { useRouter } from 'vue-router';
         data: Object
     });
 
-    const menu_ = props.data ? props.data : { 'name': '' };
-    const state = reactive({
-            menuLocal: { ...menu_ }
-    });
+    const dataMenu = props.data ? props.data[0] ? props.data[0] : {} : {}
+
+    const menu = reactive({
+        name: '',
+        price: '',
+        description: '',
+        ...dataMenu
+    })
 
     const emitAction = (item) => {
         emit('emitAction', item);

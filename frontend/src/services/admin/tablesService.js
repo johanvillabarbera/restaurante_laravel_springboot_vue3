@@ -15,5 +15,8 @@ export default {
     },
     UpdateTables(data) {
         return Api(baseURL).put(`${ENDPOINT}/${data.tableID}`, data);
+    },
+    DeleteTable(id) {
+        return Api(baseURL).delete(`${ENDPOINT}/${id}`);
     }
 }

@@ -71,9 +71,9 @@
     routerLink: '/home'
   },
   {
-    icon: 'help',
+    icon: 'home',
     iconColor: 'primary',
-    label: 'Help',
+    label: 'Home',
     separator: false,
     routerLink: '/home'
   }

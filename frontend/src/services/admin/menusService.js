@@ -16,5 +16,8 @@ export default {
     },
     UpdateMenus(data) {
         return Api(baseURL).put(`${ENDPOINT}/${data.menuID}`, data);
+    },
+    DeleteMenu(id) {
+        return Api(baseURL).delete(`${ENDPOINT}/${id}`);
     }
 }
