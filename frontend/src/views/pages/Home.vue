@@ -66,4 +66,8 @@ import { useRouter } from 'vue-router';
         border-radius: 10px;
     }
 
+    body {
+        background: linear-gradient(to bottom, #f9f9f9, #e0e0e0);
+    }
+
 </style>

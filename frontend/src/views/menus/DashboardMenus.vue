@@ -46,6 +46,7 @@
     body {
         margin: 0px;
         padding: 0px;
+        background: linear-gradient(to bottom, #f9f9f9, #e0e0e0)
     }
 
     .header {
