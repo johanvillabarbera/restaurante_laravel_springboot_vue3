@@ -1,0 +1,82 @@
+version: "3"
+services:
+  db:
+    image: mysql:5.7
+    container_name: $DB_CONTAINER
+    command: mysqld --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
+    ports:
+      - "$PORT_MYSQL:3306"
+    env_file: .env
+    restart: always
+    volumes:
+      - ./backend/db/iniDB.sql:/docker-entrypoint-initdb.d/initDB.sql
+      - poliserva_mysql_data:/var/lib/mysql
+    networks:
+      mynetwork: 
+        ipv4_address: $IP_DB
+
+  backend-laravel:
+    build: 
+      context: ./backend/
+      dockerfile: ./laravel/Dockerfile
+    container_name: $LARAVEL_CONTAINER
+    env_file: .env
+    command: sh -c './wait-for-it.sh db:3306; ./migrate.sh; php artisan serve --host=0.0.0.0 --port=4000'
+    ports:
+      - "$PORT_LARAVEL:4000"
+    depends_on:
+      - db
+    volumes:
+      - ./backend/laravel:/app/laravel
+      - poliserva_laravel_uploads:/app/laravel/public/uploads
+      - ./backend/db/migrate.sh:/app/laravel/migrate.sh
+    networks:
+      mynetwork: 
+        ipv4_address: $IP_LARAVEL
+
+  springboot:
+    build:
+      context: ./backend/sboot
+    container_name: $SPRING_CONTAINER
+    env_file: .env
+    ports:
+      - "$PORT_SPRINGBOOT:7800"
+    volumes:
+      - ./backend/sboot:/app
+      - ./backend/sboot/target:/app/target 
+      - maven-repo:/root/.m2
+    depends_on:
+      - db
+    networks:
+      mynetwork: 
+        ipv4_address: $IP_SPRINGBOOT
+
+  frontend-vue:
+    image: node:18.18
+    container_name: $VUE_CONTAINER
+    command: npm run dev
+    working_dir: /app
+    ports:
+      - "$PORT_VUE:8000"
+    volumes:
+      - ./frontend:/app
+    depends_on:
+      - db
+      - backend-laravel
+    networks:
+      mynetwork: 
+        ipv4_address: $IP_VUE
+
+networks:
+  mynetwork:
+    name: $NETWORK_NAME
+    ipam:
+      driver: default
+      config:
+        - subnet: $IP_SUBNET
+          gateway: $IP_GATEWAY
+
+volumes:
+  poliserva_mysql_data:
+  poliserva_laravel_uploads:
+  maven-repo:
