@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\TablesController;
 use App\Http\Controllers\TurnsController;
 use App\Http\Controllers\MenusController;
+use App\Http\Controllers\UserController;
 
 /*
 |--------------------------------------------------------------------------
@@ -25,5 +26,8 @@ Route::group(['middleware' => ['cors']], function () {
     Route::resource('tables', TablesController::class);
     Route::resource('turns', TurnsController::class);
     Route::resource('menus', MenusController::class);
+    Route::resource('users', UserController::class);
     // Route::get('tables/static', [TablesController::class, 'index']);
 });
+
+Route::post('login', [UserController::class, 'login']);
