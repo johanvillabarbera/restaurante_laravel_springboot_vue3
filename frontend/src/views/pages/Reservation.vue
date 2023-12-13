@@ -250,20 +250,6 @@
     color: white;
 }
 
-/* .mesa {
-  margin: 1rem;
-  width: 100px;
-  height: 100px;
-} */
-
-/* .meets-filters {
-  background-color: green;
-} */
-
-/* .no-meets-filters {
-  background-color: grey;
-} */
-
 .row {
   flex-wrap: nowrap;
 }

@@ -5,17 +5,21 @@ RUN apk add --no-cache \
     linux-headers \
     g++ \
     make \
-    autoconf
+    autoconf \
+    curl \
+    curl-dev
 
 # Instalar extensiones de PHP
-RUN docker-php-ext-install pdo pdo_mysql sockets
+RUN docker-php-ext-install pdo pdo_mysql sockets \
+    && apk add --no-cache curl-dev \
+    && docker-php-ext-install curl
 
 # Instalar Composer
 RUN curl -sS https://getcomposer.org/installer | php -- \
     --install-dir=/usr/local/bin --filename=composer
 
 # Copiar Composer desde la imagen de Composer
-COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
+#COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
 # Establecer directorio de trabajo
 WORKDIR /app/laravel
