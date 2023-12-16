@@ -2,7 +2,7 @@ package com.springboot.spring.controller;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
+import jakarta.servlet.http.HttpServletRequest;
 import com.springboot.spring.model.User;
 import com.springboot.spring.model.UserWithToken;
 import com.springboot.spring.repository.UserRepository;
@@ -29,8 +29,10 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import com.springboot.spring.security.jwt.JwtUtils;
-
+import com.springboot.spring.repository.BlacklistTokenRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import com.springboot.spring.security.jwt.AuthTokenFilter;
+import com.springboot.spring.model.BlacklistToken;
 
 @CrossOrigin(origins = "http://bellidel.eu:8000")
 @RestController
@@ -42,6 +44,12 @@ public class UserController {
 
     @Autowired
     UserRepository userRepository;
+
+    @Autowired
+    private BlacklistTokenRepository BlacklistTokenRepository;
+
+    @Autowired
+    private AuthTokenFilter authTokenFilter;
 
     @Autowired
     private PasswordEncoder encoder;
@@ -70,16 +78,42 @@ public class UserController {
         }
     }
 
+    // Get a profile of user by authorization bearer
+
+    @GetMapping("/profile")
+    public ResponseEntity<User> profile() {
+    try {
+        UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication()
+                .getPrincipal();
+        User user = userRepository.findByUsername(userDetails.getUsername()).get();
+        return new ResponseEntity<>(user, HttpStatus.OK);
+    } catch (Exception e) {
+        System.err.println(e);
+        return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+    }
+}
+
+
     @PostMapping("/login")
     public ResponseEntity<UserWithToken> loginUser(@RequestBody User user) {
         try {
+
+            if (userRepository.existsByUsername(user.getUsername()) == 0) {
+                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            }
+            
             Authentication authentication = authenticationManager.authenticate(
             new UsernamePasswordAuthenticationToken(user.getUsername(), user.getPassword()));
+            
             SecurityContextHolder.getContext().setAuthentication(authentication);
+            
             String jwt = jwtUtils.generateJwtToken(authentication);
 
             User user_ = userRepository.findByUsername(user.getUsername()).get();
+
             UserWithToken userToken = new UserWithToken(jwt, user_);
+
+            
 
             return new ResponseEntity<>(userToken, HttpStatus.OK);
         } catch (Exception e) {
@@ -109,6 +143,23 @@ public class UserController {
             return new ResponseEntity<>(_user, HttpStatus.CREATED);
         } catch (Exception e) {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @PostMapping("/logout")
+    public ResponseEntity<?> logoutUser(HttpServletRequest request) {
+        try {
+            String token = authTokenFilter.parseJwt(request);
+            if (BlacklistTokenRepository.TokenExist(token) == 0) {
+                BlacklistToken blacklistToken = new BlacklistToken();
+                blacklistToken.setToken(token);
+                BlacklistTokenRepository.save(blacklistToken);
+            }
+            return new ResponseEntity<>(HttpStatus.OK);
+
+        } catch (Exception e) {
+            System.err.println(e);
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 

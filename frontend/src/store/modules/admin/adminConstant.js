@@ -12,5 +12,5 @@ export default {
     INITIALIZE_MENU: "InitializeMenuAdmin",
     UPDATE_MENUS: "UpdateMenusAdmin",
     CREATE_MENU: "CreateMenuAdmin",
-    DELETE_MENU: "DeleteMenuAdmin"
+    DELETE_MENU: "DeleteMenuAdmin",
 }

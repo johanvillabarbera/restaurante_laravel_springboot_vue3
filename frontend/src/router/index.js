@@ -57,6 +57,11 @@ const router = createRouter({
       name: "menusUpdate",
       component: () => import('../views/menus/updateMenus.vue')
     },
+    {
+      path: "/login",
+      name: "login",
+      component: () => import('../views/pages/Login.vue')
+    },
   ]
 })
 

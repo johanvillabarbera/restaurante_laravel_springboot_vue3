@@ -4,16 +4,20 @@ import java.util.Date;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
-
+import com.springboot.spring.repository.BlacklistTokenRepository;
 import com.springboot.spring.security.services.UserDetailsImpl;
 import io.jsonwebtoken.*;
 
 @Component
 public class JwtUtils {
   private static final Logger logger = LoggerFactory.getLogger(JwtUtils.class);
+
+  @Autowired
+  BlacklistTokenRepository BlacklistTokenRepository;
 
   @Value("${spring.app.jwtSecret}")
   private String jwtSecret;
@@ -40,6 +44,9 @@ public class JwtUtils {
 
   public boolean validateJwtToken(String authToken) {
     try {
+      if (BlacklistTokenRepository.TokenExist(authToken) != 0) {
+        return false;
+      }
       Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(authToken);
       return true;
     } catch (SignatureException e) {

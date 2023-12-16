@@ -33,7 +33,10 @@ RUN chmod +x wait-for-it.sh
 
 # Instalar dependencias de Composer
 RUN composer install
-
+RUN php artisan key:generate
+RUN php artisan jwt:secret
+RUN php artisan cache:clear
+RUN php artisan config:cache
 # Exponer el puerto 4000
 EXPOSE 4000
 

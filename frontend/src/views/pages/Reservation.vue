@@ -84,12 +84,14 @@
       console.error(error);
     }
 
-    // Definimos el state
+    // Creamos el estado y comprobamos si hay filtros para usar useTableFilters
+    
     const state = reactive({
-      tables: useTableFilters(filters_URL),
+      tables: filters_URL.turn !== '' ? useTableFilters(filters_URL) : [],
     }) 
 
     const aplicarFiltros = (filters) => {
+
       const filters_64 = btoa(JSON.stringify(filters));
       console.log(filters);
       router.push({ name: 'reservationFilters', params: { filters: filters_64 } });
@@ -126,7 +128,7 @@
 
 </script>
 
-<style lang="css">
+<style lang="css" scoped>
 
 
 .tables-container {
