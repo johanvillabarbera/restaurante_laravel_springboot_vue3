@@ -1,6 +1,13 @@
 <script setup>
 import HeaderView from './components/layouts/Header.vue'
 import { RouterView } from 'vue-router'
+import { useStore } from 'vuex';
+import authConstant from './store/modules/auth/authConstant';
+const store = useStore();
+
+if (localStorage.getItem("token")) {
+  store.dispatch(`auth/${authConstant.INITIALIZE_PROFILE}`);
+}
 </script>
 
 <template>

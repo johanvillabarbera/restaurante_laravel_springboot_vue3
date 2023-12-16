@@ -7,19 +7,21 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
+use PHPOpenSourceSaver\JWTAuth\Contracts\JWTSubject;
 
-class User extends Authenticatable
+class User extends Authenticatable implements JWTSubject
 {
     use HasApiTokens, HasFactory, Notifiable;
 
     protected $table = 'clients';
-
+    protected $primaryKey = 'clientID';
     /**
      * The attributes that are mass assignable.
      *
      * @var array<int, string>
      */
     protected $fillable = [
+        'clientID',
         'name',
         'surname',
         'email',
@@ -59,6 +61,9 @@ class User extends Authenticatable
 
     public function getJWTCustomClaims()
     {
-        return [];
+        return [
+            'email'=>$this->email,
+            'name'=>$this->name
+        ];
     }
 }

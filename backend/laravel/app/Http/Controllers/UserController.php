@@ -59,19 +59,32 @@ class UserController extends Controller
 
     public function login(LoginUserRequest $request)
     {
-        $token = auth()->attempt($request->validated());
-        if (!$token) {
+        $user = User::where('username', $request->validated()['username'])->first();
+        if (!$user) {
             return response()->json([
                 "error" => "Unauthorized"
             ], 401);
         }
-        if (auth()->user()->type != "admin") {
+// Token is true but i need the jwt token
+        $token = auth('api')->attempt($request->only(['username', 'password']));
+        //$token = auth('api')->attempt($request->validated());
+        //$token = Auth()->login($user);
+
+        //$token = auth()->tokenById(15);
+        if (!$token) {
             return response()->json([
+                "token" => $token,
                 "error" => "Unauthorized"
             ], 401);
         }
 
-        return response()->json(['token' => $token, 'user' => UserResource::make(auth()->user())]);
+        if ($user->IDrol != 2) {
+            return response()->json([
+                "error" => "Unauthorized"
+            ], 401);
+        }
+        //$newToken = auth()->refresh();
+        return response()->json(['token' => $token, 'user' => $user]);
     } //login
 
     /**
@@ -105,4 +118,71 @@ class UserController extends Controller
     {
         //
     }
+
+    public function logout()
+    {
+        try {
+            if (auth('api')->user() === null) {
+                return response()->json(['error' => 'logout error'], 500);
+            }
+            auth('api')->logout();
+            return response()->json(["Message" => "Logout correctly"]);
+        } catch (\Throwable $th) {
+            return response()->json(['error' => 'logout error'], 500);
+        }
+    }
+
+    public function getUserToken()
+    {
+        try {
+            return UserResource::make(auth('api')->user());
+        } catch (\Throwable $th) {
+            return response()->json(['error' => 'get user error'], 401);
+        }
+    }
+
+    /**
+     * Refresh a token.
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function refresh()
+    {
+        return $this->respondWithToken(auth()->refresh());
+    }
+
+    /**
+     * Get the token array structure.
+     *
+     * @param  string $token
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    protected function respondWithToken($token)
+    {
+        return response()->json([
+            'access_token' => $token,
+            'token_type' => 'bearer',
+            'expires_in' => auth()->factory()->getTTL() * 60
+        ]);
+    }
+
+    public function isAdmin()
+    {
+        try {
+            if (auth()->user() == null || auth()->user()->IDrol != 2) {
+                return response()->json([
+                    "error" => "Unauthorized"
+                ], 403);
+            }
+            return response()->json([
+                "msg" => "You are and admin"
+            ], 200);
+        } catch (\Throwable $th) {
+            return response()->json([
+                "error" => "Unauthorized"
+            ], 403);
+        }
+    }
+    
 }

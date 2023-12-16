@@ -11,19 +11,33 @@
             <router-link to="/reservation" class="link">
                 <li><span>Reservas</span></li>
             </router-link>
-            <router-link to="/develop" class="link">
-                <li><span>Develop</span></li>
+            <router-link to="/login" class="link">
+                <li><span>Login</span></li>
             </router-link>
             <router-link to="/develop" class="link">
                 <li><span>Develop</span></li>
             </router-link>
-            
+            <li @click="logout()" v-if="state.isLogged" class="page link"><span>Log Out</span></li>
         </ul>
     </nav>
 </template>
 
 <script setup>
+
+    import { useStore } from 'vuex';
+    import { reactive, computed } from 'vue';
+    import authConstant from '../../store/modules/auth/authConstant';
+
+    const store = useStore();
+
+    const state = reactive({
+        isLogged: computed(() => store.getters['auth/GetIsAuth'])
+    })
     
+    const logout = () => {
+        store.dispatch(`auth/${authConstant.LOGOUT}`);
+    }
+
 </script>
 
 <style lang="css">

@@ -31,3 +31,5 @@ Route::group(['middleware' => ['cors']], function () {
 });
 
 Route::post('login', [UserController::class, 'login']);
+Route::get('profile', [UserController::class, 'getUserToken']);
+Route::get('logout', [UserController::class, 'logout']);
