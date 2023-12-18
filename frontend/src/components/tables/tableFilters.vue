@@ -138,7 +138,7 @@
 
 </script>
 
-<style>
+<style scoped>
 
 .fixed-size-step {
   height: auto; 

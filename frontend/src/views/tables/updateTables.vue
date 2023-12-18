@@ -40,3 +40,9 @@ import { useQuasar } from 'quasar'
         return: () => router.push({ name: 'tables' }),
     };
 </script>
+
+<style>
+.header {
+    display: none;
+  }
+</style>

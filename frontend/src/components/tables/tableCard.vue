@@ -14,7 +14,7 @@
     });
 </script>
 
-<style lang="css">
+<style lang="css" scoped>
     .table {
         color: #333;
         width: calc(100% / 4 - 2%); 

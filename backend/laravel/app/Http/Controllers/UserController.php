@@ -170,7 +170,7 @@ class UserController extends Controller
     public function isAdmin()
     {
         try {
-            if (auth()->user() == null || auth()->user()->IDrol != 2) {
+            if (auth('api')->user() == null || auth('api')->user()->IDrol != 2) {
                 return response()->json([
                     "error" => "Unauthorized"
                 ], 403);

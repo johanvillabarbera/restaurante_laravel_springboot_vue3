@@ -6,7 +6,7 @@ const baseURLLaravel = import.meta.env.VITE_URL_LARAVEL;
 const ENDPOINTS = {
     "ENDPOINT_LOGIN_SPRING": "user/login",
     "ENDPOINT_LOGIN_LARAVEL": "login",
-    "ENDPOINT_IS_ADMIN": "user/isAdmin",
+    "ENDPOINT_IS_ADMIN": "isAdmin",
     "ENDPOINT_PROFILE": "user/profile",
     "ENDPOINT_LOGOUT_SPRING": "user/logout",
     "ENDPOINT_LOGOUT_LARAVEL": "logout"

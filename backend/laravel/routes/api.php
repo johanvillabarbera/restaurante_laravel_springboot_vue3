@@ -21,15 +21,18 @@ use App\Http\Controllers\UserController;
 // Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 //     return $request->user();
 // });
-Route::group(['middleware' => ['cors']], function () {
+// Add another middleware to the group:
+
+Route::group(['middleware' => ['cors', 'admin']], function () {
     //Rutas a las que se permitirá acceso
     Route::resource('tables', TablesController::class);
     Route::resource('turns', TurnsController::class);
     Route::resource('menus', MenusController::class);
     Route::resource('users', UserController::class);
     // Route::get('tables/static', [TablesController::class, 'index']);
+    Route::get('profile', [UserController::class, 'getUserToken']);
+    Route::get('logout', [UserController::class, 'logout']);
+    Route::get('isAdmin', [UserController::class, 'isAdmin']);
 });
 
 Route::post('login', [UserController::class, 'login']);
-Route::get('profile', [UserController::class, 'getUserToken']);
-Route::get('logout', [UserController::class, 'logout']);

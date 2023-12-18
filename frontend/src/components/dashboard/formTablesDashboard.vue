@@ -62,3 +62,18 @@ import { useRouter } from 'vue-router';
         emit('emitAction', item)
     }
 </script>
+
+<style scoped>
+.login-box {
+    max-width: 500px;
+    margin: 50px auto;
+    padding: 20px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+}
+
+h2 {
+    text-align: center;
+    margin-bottom: 20px;
+}
+</style>

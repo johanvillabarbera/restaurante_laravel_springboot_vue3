@@ -14,7 +14,7 @@ import { useStore } from 'vuex';
     console.log(login);
 </script>
 
-<style lang="css">
+<style lang="css" scoped>
 body {
     margin: 0px;
     padding: 0px;
