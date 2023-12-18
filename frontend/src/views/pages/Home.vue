@@ -39,7 +39,7 @@ import { useRouter } from 'vue-router';
     }
 </script>
 
-<style lang="css">
+<style lang="css" scoped>
 /* img {
     transform: rotate(0);
     transition: transform .8s ease-in-out;

@@ -12,7 +12,7 @@
                 <li><span>Reservas</span></li>
             </router-link>
             <router-link to="/login" class="link">
-                <li><span>Login</span></li>
+                <li v-if="!state.isLogged"><span>Login</span></li>
             </router-link>
             <router-link to="/develop" class="link">
                 <li><span>Develop</span></li>
@@ -40,7 +40,7 @@
 
 </script>
 
-<style lang="css">
+<style lang="css" scoped>
     .header {
         background-color: #000000;
         padding: 2vh;

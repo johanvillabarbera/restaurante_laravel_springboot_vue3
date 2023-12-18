@@ -16,14 +16,14 @@ export default {
                 next('/login');
             }
         } catch (error) {
-            store.dispatch(`user/${Constant.LOGOUT}`);
+            store.dispatch(`user/${authConstant.LOGOUT}`);
 
         }
     },//authGuardAdmin
 
     async AuthGuard(to, from, next) {
         if (localStorage.getItem('isAuth')) {
-            await store.dispatch(`user/${Constant.INITIALIZE_PROFILE}`);
+            await store.dispatch(`user/${authConstant.INITIALIZE_PROFILE}`);
         }
         if (store.getters['user/GetIsAuth'] && localStorage.getItem('isAuth')) {
             next();
@@ -33,7 +33,7 @@ export default {
     },//noAuthGuard
 
     noAuthGuard(to, from, next) {
-        if (!store.getters['user/GetIsAuth'] && !localStorage.getItem('isAuth')) {
+        if (!store.getters['auth/GetIsAuth'] && !localStorage.getItem('isAuth')) {
             next();
         } else {
             next('/home');

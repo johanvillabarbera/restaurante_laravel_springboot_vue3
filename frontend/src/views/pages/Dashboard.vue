@@ -31,10 +31,10 @@
 </script>
 
 <style lang="css">
-body {
-    margin: 0px;
-    padding: 0px;
-}
+  body {
+      margin: 0px;
+      padding: 0px;
+  }
     .header {
         display: none;
     }

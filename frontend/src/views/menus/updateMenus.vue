@@ -42,3 +42,9 @@ import { useQuasar } from 'quasar'
     }
 
 </script>
+
+<style>
+.header {
+    display: none;
+  }
+</style>

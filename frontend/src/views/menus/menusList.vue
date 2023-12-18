@@ -30,7 +30,7 @@ import { computed, getCurrentInstance, reactive } from 'vue';
 
 </script>
 
-<style lang="css">
+<style lang="css" scoped>
 
     .menu_list h2 {
         font-size: 3em;
@@ -46,5 +46,9 @@ import { computed, getCurrentInstance, reactive } from 'vue';
         flex-wrap: wrap;
         justify-content: space-evenly;
     }
+
+    .header {
+    display: none;
+  }
 
 </style>
