@@ -70,6 +70,13 @@ const router = createRouter({
       component: () => import('../views/pages/Login.vue'),
       beforeEnter: authGuards.noAuthGuard, meta: { requiresAuth: true }
     },
+    // PROFILE
+    {
+      path: "/profile",
+      name: "profile",
+      component: () => import('../views/pages/Profile.vue'),
+      beforeEnter: authGuards.authGuard, meta: { requiresAuth: true }
+    }
   ]
 })
 

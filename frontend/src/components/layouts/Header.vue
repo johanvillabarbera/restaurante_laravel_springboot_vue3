@@ -6,7 +6,7 @@
                 <li><span>Home</span></li>
             </router-link>
             <router-link to="/dashboard" class="link" :class="{ active: isDashboard }">
-                <li><span>Dashboard</span></li>
+                <li v-if="state.isAdmin"><span>Dashboard</span></li>
             </router-link>
             <router-link to="/reservation" class="link">
                 <li><span>Reservas</span></li>
@@ -16,6 +16,9 @@
             </router-link>
             <router-link to="/develop" class="link">
                 <li><span>Develop</span></li>
+            </router-link>
+            <router-link to="/profile" class="link" :class="{ active: isProfile }">
+                <li v-if="state.isLogged"><span>Profile</span></li>
             </router-link>
             <li @click="logout()" v-if="state.isLogged" class="page link"><span>Log Out</span></li>
         </ul>
@@ -31,7 +34,8 @@
     const store = useStore();
 
     const state = reactive({
-        isLogged: computed(() => store.getters['auth/GetIsAuth'])
+        isLogged: computed(() => store.getters['auth/GetIsAuth']),
+        isAdmin: computed(() => store.getters['auth/GetIsAdmin']),
     })
     
     const logout = () => {
