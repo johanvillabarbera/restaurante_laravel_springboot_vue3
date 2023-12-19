@@ -30,9 +30,12 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import com.springboot.spring.security.jwt.JwtUtils;
 import com.springboot.spring.repository.BlacklistTokenRepository;
+import com.springboot.spring.repository.UserEventTableRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import com.springboot.spring.security.jwt.AuthTokenFilter;
 import com.springboot.spring.model.BlacklistToken;
+import com.springboot.spring.model.UserEventTable;
+import java.util.Date;
 
 @CrossOrigin(origins = "http://bellidel.eu:8000")
 @RestController
@@ -47,6 +50,9 @@ public class UserController {
 
     @Autowired
     private BlacklistTokenRepository BlacklistTokenRepository;
+
+    @Autowired
+    private UserEventTableRepository userEventTableRepository;
 
     @Autowired
     private AuthTokenFilter authTokenFilter;
@@ -95,7 +101,7 @@ public class UserController {
 
 
     @PostMapping("/login")
-    public ResponseEntity<UserWithToken> loginUser(@RequestBody User user) {
+    public ResponseEntity<UserWithToken> loginUser(@RequestBody User user, HttpServletRequest request) {
         try {
 
             if (userRepository.existsByUsername(user.getUsername()) == 0) {
@@ -113,6 +119,25 @@ public class UserController {
 
             UserWithToken userToken = new UserWithToken(jwt, user_);
 
+            // SAVE LOGIN EVENT
+            UserEventTable userEventTable = new UserEventTable();
+
+             String ipAddress = request.getRemoteAddr(); // Obtains IP user
+             String userAgent = request.getHeader("User-Agent"); // Obtains User Agent
+
+            userEventTable.setUserID(user_.getClientID());
+            userEventTable.setEventType("LOGIN");
+            userEventTable.setEventTimestamp(new Date());
+            userEventTable.setUserIP(ipAddress);
+            userEventTable.setEventDetails("Login");
+            userEventTable.setUserAgent(userAgent);
+            
+
+
+            // UserEventTableRepository.save(userEventTable);
+
+            userEventTableRepository.save(userEventTable);
+                        
             
 
             return new ResponseEntity<>(userToken, HttpStatus.OK);
@@ -151,8 +176,20 @@ public class UserController {
         try {
             String token = authTokenFilter.parseJwt(request);
             if (BlacklistTokenRepository.TokenExist(token) == 0) {
+                // Obten el token
                 BlacklistToken blacklistToken = new BlacklistToken();
+
+                // Obten información del usuario
+                UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication()
+                .getPrincipal();
+                User user = userRepository.findByUsername(userDetails.getUsername()).get();
+
+                blacklistToken.setClientID(user.getClientID());
+                blacklistToken.setUsername(user.getUsername());
                 blacklistToken.setToken(token);
+                blacklistToken.setDate_logout(new Date());
+
+                logger.info("User: " + user.getUsername() + " logged out");
                 BlacklistTokenRepository.save(blacklistToken);
             }
             return new ResponseEntity<>(HttpStatus.OK);
