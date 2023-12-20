@@ -1,0 +1,12 @@
+user.name=Johanvillabarbera
+user.email=johanvillabarbera@gmail.com
+core.repositoryformatversion=0
+core.filemode=true
+core.bare=false
+core.logallrefupdates=true
+remote.origin.url=https://github.com/johanvillabarbera/restaurante_laravel_springboot_vue3.git
+remote.origin.fetch=+refs/heads/*:refs/remotes/origin/*
+branch.develop.remote=origin
+branch.develop.merge=refs/heads/develop
+user.name=Miguelvidalbellido
+user.email=miguel.vidal.bell@gmail.com
