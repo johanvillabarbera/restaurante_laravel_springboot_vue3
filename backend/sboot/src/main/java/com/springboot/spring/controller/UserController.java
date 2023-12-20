@@ -141,7 +141,7 @@ public class UserController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<User> createUser(@RequestBody User user) {
+    public ResponseEntity<User> createUser(@RequestBody User user, HttpServletRequest request) {
         try {
 
             if (userRepository.existsByUsername(user.getUsername()) > 0) {
@@ -155,9 +155,25 @@ public class UserController {
             if (userRepository.existsByTlf(user.getTlf()) > 0) {
                 return new ResponseEntity<>(null, HttpStatus.CONFLICT);
             }
+
+
             user.setPassword(encoder.encode(user.getPassword()));
             user.setIDrol("1");
+
             User _user = userRepository.save(user);
+
+            // Almacenamos el registro de usuario
+            UserEventTable userEventTable = new UserEventTable();
+
+            userEventTable.setUserID(_user.getClientID());
+            userEventTable.setEventType("REGISTER");
+            userEventTable.setEventTimestamp(new Date());
+            userEventTable.setUserIP(request.getRemoteAddr());
+            userEventTable.setEventDetails("Register");
+            userEventTable.setUserAgent(request.getHeader("User-Agent"));
+
+            userEventTableRepository.save(userEventTable);
+
             //User _user = userRepository.save(new User(user.getClientID(), user.getName(), user.getSurname(), user.getEmail(), user.setPassword(encoder.encode(user.getPassword())), user.getTlf(), user.getAddress(), user.getBirth_date(), user.getIDrol(), user.getUsername()));
             return new ResponseEntity<>(_user, HttpStatus.CREATED);
         } catch (Exception e) {

@@ -43,16 +43,16 @@ export const auth = {
             }
         },//LOGOUT
 
-        // [Constant.ADD_USER]: async (store, payload) => {
-        //     try {
-        //         const response = await UserService.Register(payload);
-        //         if (response.status === 201) {
-        //             store.commit(Constant.ADD_USER, true);
-        //         }
-        //     } catch (error) {
-        //         console.error('Register error');
-        //     }
-        // },//ADD_USER
+        [authConstant.ADD_USER]: async (store, payload) => {
+            try {
+                const response = await AuthService.Register(payload);
+                if (response.status === 201) {
+                    store.commit(Constant.ADD_USER, true);
+                }
+            } catch (error) {
+                console.error('Register error');
+            }
+        },//ADD_USER
 
         [authConstant.INITIALIZE_PROFILE]: async (store) => {
             try {
@@ -87,11 +87,11 @@ export const auth = {
                 router.push({ name: 'home' });
             }
         },//LOGIN_ADMIN
-        // [Constant.ADD_USER]: (state, payload) => {
-        //     if (payload) {
-        //         router.push({ name: 'login' });
-        //     }
-        // },//ADD_USER
+        [authConstant.ADD_USER]: (state, payload) => {
+            if (payload) {
+                router.push({ name: 'login' });
+            }
+        },//ADD_USER
         [authConstant.INITIALIZE_PROFILE]: (state, payload) => {
             if (payload) {
                 state.user = payload;

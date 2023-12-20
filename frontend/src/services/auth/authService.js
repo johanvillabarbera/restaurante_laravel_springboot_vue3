@@ -9,7 +9,8 @@ const ENDPOINTS = {
     "ENDPOINT_IS_ADMIN": "isAdmin",
     "ENDPOINT_PROFILE": "user/profile",
     "ENDPOINT_LOGOUT_SPRING": "user/logout",
-    "ENDPOINT_LOGOUT_LARAVEL": "logout"
+    "ENDPOINT_LOGOUT_LARAVEL": "logout",
+    "ENDPOINT_REGISTER": "user/register",
 };
 
 export default {
@@ -37,4 +38,8 @@ export default {
     LogoutAdmin() {
         return Api(baseURLLaravel).get(ENDPOINTS.ENDPOINT_LOGOUT_LARAVEL);
     },
+
+    Register(data) {
+        return Api(baseURLSpring).post(ENDPOINTS.ENDPOINT_REGISTER, data);
+    },//Register
 }

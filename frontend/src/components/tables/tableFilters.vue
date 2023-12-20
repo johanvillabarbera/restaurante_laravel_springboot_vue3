@@ -18,6 +18,7 @@
                   <q-date
                     v-model="date"
                     color="dark"
+                    mask="YYYY-MM-DD"
                     landscape
                   />
 

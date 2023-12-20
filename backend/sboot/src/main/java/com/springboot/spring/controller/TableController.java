@@ -88,11 +88,15 @@ public class TableController {
             }
 
             if (_tableQueryParam.getDate() != null) {
-                sqlBuilder.append(" AND ( booking_day = ").append(_tableQueryParam.getDate()).append(" OR booking_day IS NULL ) THEN 'true' ELSE 'false' END as meets_filters FROM ReservationFilters ");
+                sqlBuilder.append(" AND ( booking_day = '").append(_tableQueryParam.getDate()).append("' OR booking_day IS NULL ) THEN 'true' ELSE 'false' END as meets_filters FROM ReservationFilters ");
             }
 
             if (_tableQueryParam.getTurn() != null) {
                 sqlBuilder.append(" WHERE turn_hour = '").append(_tableQueryParam.getTurn()).append("'");
+            }
+
+            if (_tableQueryParam.getDate() != null) {
+                sqlBuilder.append(" AND (booking_day = '").append(_tableQueryParam.getDate()).append("' OR booking_day IS NULL)");
             }
 
             sqlBuilder.append(" ORDER BY tableID");
