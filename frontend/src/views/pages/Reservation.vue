@@ -10,12 +10,6 @@
             <div class="q-pa-md">
               <tableFilters @filters="aplicarFiltros" :filters="filters_URL" />
             </div>
-
-            <div class="q-pa-md">
-              <!-- Aquí puedes agregar tus filtros de búsqueda -->
-              <q-input filled v-model="filtro" label="Buscar" debounce="300" />
-              <!-- Otros componentes de filtro pueden ir aquí -->
-            </div>
           </q-col>
           <q-grid class="column">
           <!-- Div para mostrar el contenido de los filtros seleccionados -->
@@ -32,7 +26,8 @@
               <div v-if="state.tables.length > 0">
                 <!-- Renderizar datos aquí -->
                 <div class="tables-container">
-                  <div class="table-container" v-for="(table, index) in state.tables" :key="table.id">
+                  <div class="table-container" v-for="(table, index) in state.tables" :key="table.id" @click="detectClickTable(table)">
+                    <reservationModal :model="alert"></reservationModal>
                     <div :class=" tableClasses[index]">
                       <!-- Mesa {{ item.tableID }} -->
                       <div class="chair chair-top"></div>
@@ -43,7 +38,7 @@
                     </div>
                   </div>
                 </div>
-                {{ state.tables }}
+                <!-- {{ state.tables }} -->
               </div>
               <div v-else>
                 Cargando datos...
@@ -60,12 +55,14 @@
 <script setup>
     import tableFilters from '../../components/tables/tableFilters.vue';
     import { useRouter, useRoute } from 'vue-router';
-    import { reactive, computed } from 'vue';
+    import { reactive, computed, ref } from 'vue';
     import { useTableFilters } from '../../composables/tables/useTable';
+    import reservationModal from '../../components/reservation/reservationModal.vue';
 
     
     const route = useRoute();
     const router = useRouter();
+    const alert = ref(false);
 
     // Seteamos el objeto de filtros
     let filters_URL = {
@@ -124,8 +121,15 @@
     });
 
 
+    const detectClickTable = (table) => {
+      alert.value = true;
+      if (table.estado_reserva) {
+        console.log("Mesa no disponible");
+      } else if (!table.meets_filters) {
+        console.log("No cumple con los requisitos");
+      }
     
-
+    }
 </script>
 
 <style lang="css" scoped>

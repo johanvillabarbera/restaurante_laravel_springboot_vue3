@@ -12,7 +12,7 @@
       <q-page-container>
         <q-page padding>
           <!-- Contenido -->
-         
+          <launch_charts />
         </q-page>
       </q-page-container>
     </q-layout>
@@ -23,6 +23,7 @@
     
     import Sidebar from '../../components/dashboard/Sidebar.vue';
     import gridTables from '../../components/dashboard/gridTables.vue';
+    import launch_charts from '../../components/charts_dashboard/launch_charts.vue';
     import { ref } from 'vue'
     const drawer = ref(false);
 

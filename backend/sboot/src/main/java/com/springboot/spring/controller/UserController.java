@@ -131,15 +131,9 @@ public class UserController {
             userEventTable.setUserIP(ipAddress);
             userEventTable.setEventDetails("Login");
             userEventTable.setUserAgent(userAgent);
-            
-
-
-            // UserEventTableRepository.save(userEventTable);
 
             userEventTableRepository.save(userEventTable);
-                        
             
-
             return new ResponseEntity<>(userToken, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
@@ -184,12 +178,27 @@ public class UserController {
                 .getPrincipal();
                 User user = userRepository.findByUsername(userDetails.getUsername()).get();
 
+                // SAVE LOGIN EVENT
+                UserEventTable userEventTable = new UserEventTable();
+
+                String ipAddress = request.getRemoteAddr(); // Obtains IP user
+                String userAgent = request.getHeader("User-Agent"); // Obtains User Agent
+
+                userEventTable.setUserID(user.getClientID());
+                userEventTable.setEventType("LOGOUT");
+                userEventTable.setEventTimestamp(new Date());
+                userEventTable.setUserIP(ipAddress);
+                userEventTable.setEventDetails("Logout");
+                userEventTable.setUserAgent(userAgent);
+
+                userEventTableRepository.save(userEventTable);
+
+                //Save token in blacklist
                 blacklistToken.setClientID(user.getClientID());
                 blacklistToken.setUsername(user.getUsername());
                 blacklistToken.setToken(token);
                 blacklistToken.setDate_logout(new Date());
 
-                logger.info("User: " + user.getUsername() + " logged out");
                 BlacklistTokenRepository.save(blacklistToken);
             }
             return new ResponseEntity<>(HttpStatus.OK);
