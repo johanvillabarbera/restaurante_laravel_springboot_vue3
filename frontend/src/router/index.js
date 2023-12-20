@@ -76,7 +76,14 @@ const router = createRouter({
       name: "profile",
       component: () => import('../views/pages/Profile.vue'),
       beforeEnter: authGuards.authGuard, meta: { requiresAuth: true }
-    }
+    },
+    // REGISTER
+    {
+      path: "/register",
+      name: "register",
+      component: () => import('../views/pages/Register.vue'),
+      beforeEnter: authGuards.noAuthGuard, meta: { requiresAuth: true }
+    },
   ]
 })
 

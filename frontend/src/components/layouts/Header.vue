@@ -12,8 +12,11 @@
                 <li><span>Reservas</span></li>
             </router-link>
             <router-link to="/login" class="link">
-                <li v-if="!state.isLogged"><span>Login</span></li>
+                <li v-if="!state.isLogged"><span>Acceder</span></li>
             </router-link>
+            <!-- <router-link to="/register" class="link">
+                <li v-if="!state.isLogged"><span>Register</span></li>
+            </router-link> -->
             <router-link to="/develop" class="link">
                 <li><span>Develop</span></li>
             </router-link>
