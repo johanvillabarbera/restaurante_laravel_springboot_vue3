@@ -27,7 +27,7 @@
                 <!-- Renderizar datos aquí -->
                 <div class="tables-container">
                   <div class="table-container" v-for="(table, index) in state.tables" :key="table.id" @click="detectClickTable(table)">
-                    <reservationModal :model="alert"></reservationModal>
+                    <reservationModal @close="closeModal()" :model="alert" :filters="filters_URL"></reservationModal>
                     <div :class=" tableClasses[index]">
                       <!-- Mesa {{ item.tableID }} -->
                       <div class="chair chair-top"></div>
@@ -69,6 +69,7 @@
         turn: '',
         capacity: '',
         date: '',
+        tableID: ''
     };
 
     // Si hay filtros en la URL, los cargamos
@@ -88,9 +89,8 @@
     }) 
 
     const aplicarFiltros = (filters) => {
-
-      const filters_64 = btoa(JSON.stringify(filters));
       console.log(filters);
+      const filters_64 = btoa(JSON.stringify(filters));
       router.push({ name: 'reservationFilters', params: { filters: filters_64 } });
       state.tables = useTableFilters(filters);
       console.log('aplicarFiltros');
@@ -122,6 +122,8 @@
 
 
     const detectClickTable = (table) => {
+      filters_URL.tableID = table.tableID;
+
       alert.value = true;
       if (table.estado_reserva) {
         console.log("Mesa no disponible");
@@ -129,6 +131,10 @@
         console.log("No cumple con los requisitos");
       }
     
+    }
+
+    const closeModal = () => {
+      alert.value = false;
     }
 </script>
 

@@ -114,7 +114,6 @@
 
 
     const loadTurns = () => {
-      console.log(optionsTurnDB.value);
       optionsTurn = optionsTurnDB.value.filter(turn => turn.meal === mealOption.value).map(function(obj) {return obj.turn});
     }
 
@@ -133,6 +132,7 @@
 
     // Emitimos los filtros al padre
     const emitirFiltros = () => {
+      console.log(state.filters);
         // Emit the filters to the parent @filters
         emit('filters', state.filters);
     }
