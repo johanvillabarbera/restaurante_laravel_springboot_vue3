@@ -7,5 +7,6 @@ export default {
     INITIALIZE_ONE_STATE_MENU: "InitializeOneStateMenu",
     CONNECT_WEBSOCKET: "ConnectWebsocket",
 
-    
+    // Reservation
+    CREATE_RESERVATION: "CreateReservation",
 }

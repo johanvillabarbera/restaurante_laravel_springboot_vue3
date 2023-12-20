@@ -1,23 +1,53 @@
 <template>
     <q-dialog v-model="props.model">
-        <q-card>
+        <q-card style="width: 700px">
         <q-card-section>
-            <div class="text-h6">Alert</div>
+            <div class="text-h6">Confirmar reserva</div>
         </q-card-section>
 
+        <q-select color="dark" bg-color="grey" filled v-model="menuOption" 
+        :options="optionsMenus" label="Selecciona un menú" style="padding: 0.5rem;"/>
+
         <q-card-section class="q-pt-none">
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Rerum repellendus sit voluptate voluptas eveniet porro. Rerum blanditiis perferendis totam, ea at omnis vel numquam exercitationem aut, natus minima, porro labore.
+            <h5>Tus preferencias</h5>
+
+            <p>Fecha: {{ props.filters.date }}</p>
+            <p>Turno: {{ props.filters.turnID }}</p>
+            <p>Capacidad: {{ props.filters.capacity }}</p>
         </q-card-section>
 
         <q-card-actions align="right">
-            <q-btn flat label="OK" color="primary" v-close-popup />
+            <q-btn flat label="Cancelar" color="warning" v-close-popup @click="close" />
+            <q-btn flat label="Confirmar" color="primary" v-close-popup @click="reservar" />
         </q-card-actions>
+
         </q-card>
     </q-dialog>
 </template>
 
 <script setup>
-    import { defineProps } from 'vue'
+    import { defineProps, getCurrentInstance, ref, computed, reactive } from 'vue'
+    import { useStore } from 'vuex';
+    import clientConstant from '../../store/modules/client/clientConstant';
 
-    let props = defineProps(['model'])
+
+    const store = useStore();
+
+    let props = defineProps(['model','filters'])
+
+    const emit = defineEmits(['close']);
+
+    const close = () => {
+        emit('close', true)
+    }
+
+    const reservar = () => {
+        props.filters.menu = menuOption;
+        console.log(props.filters);
+        store.dispatch(`reservation/${clientConstant.CREATE_RESERVATION}`, props.filters);
+    }
+
+    store.dispatch(`menu/${clientConstant.INITIALIZE_MENU}`);
+    const menuOption = ref(null);
+    const optionsMenus = computed(() => store.getters['menu/GetMenus'].map(item => item.name));
 </script>

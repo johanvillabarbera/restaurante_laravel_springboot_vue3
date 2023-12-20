@@ -55,7 +55,7 @@ public class BookingController {
     @Autowired
     BookingRepository bookingRepository;
 
-    @PostMapping("/create")
+    @PostMapping("")
     public ResponseEntity<Booking> createBooking(@RequestBody Booking booking, HttpServletRequest request) {
         try {
             
@@ -85,7 +85,7 @@ public class BookingController {
 
 
             Booking _booking = bookingRepository.save(new Booking(booking.getBookingID(), user.getClientID(),
-                    booking.getTableID(), booking.getTurnID(), booking.getBooking_day(), booking.getDiners_number(),
+                    booking.getTableID(), booking.getMenuID(), booking.getTurnID(), booking.getBooking_day(), booking.getDiners_number(),
                     booking.getStatus()));
             
             // SAVE RESERVATION EVENT

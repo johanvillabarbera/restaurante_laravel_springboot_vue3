@@ -7,7 +7,7 @@ export default function useStats() {
 
     const load = async () => {
         try {
-            const response = await statsService.GetStats();
+            const response = await statsService.GetStatsPredicts();
             stats.value = response.data;
         } catch (err) {
             error.value = err;

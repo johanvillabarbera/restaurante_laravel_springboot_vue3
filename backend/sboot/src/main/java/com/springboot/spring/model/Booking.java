@@ -27,6 +27,9 @@ public class Booking {
     @Column(name = "turnID")
     private Long turnID;
 
+    @Column(name = "menuID")
+    private Long menuID;
+
     @Column(name = "booking_day")
     private Date booking_day;
 

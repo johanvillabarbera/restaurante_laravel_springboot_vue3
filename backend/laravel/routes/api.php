@@ -6,6 +6,7 @@ use App\Http\Controllers\TablesController;
 use App\Http\Controllers\TurnsController;
 use App\Http\Controllers\MenusController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\UserEventsController;
 
 /*
 |--------------------------------------------------------------------------
@@ -33,6 +34,9 @@ Route::group(['middleware' => ['cors', 'admin']], function () {
     Route::get('profile', [UserController::class, 'getUserToken']);
     Route::get('logout', [UserController::class, 'logout']);
     Route::get('isAdmin', [UserController::class, 'isAdmin']);
+
 });
+
+Route::resource('userEvents', UserEventsController::class);
 
 Route::post('login', [UserController::class, 'login']);
