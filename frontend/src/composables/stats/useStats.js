@@ -1,11 +1,11 @@
 import { ref } from 'vue';
 import statsService from '../../services/admin/statsService';
 
-export default function useStats() {
+export const useStats = () => {
     const stats = ref([]);
     const error = ref(null);
 
-    const load = async () => {
+    const loadStatsPredict = async () => {
         try {
             const response = await statsService.GetStatsPredicts();
             stats.value = response.data;
@@ -14,5 +14,5 @@ export default function useStats() {
         }
     }
 
-    return { stats, error, load }
+    return { stats, error, loadStatsPredict }
 }

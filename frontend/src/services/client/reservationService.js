@@ -5,7 +5,7 @@ const ENDPOINT = 'booking';
 
 export default {
 
-    CreateReservation() {
-        return Api(baseURL).post(ENDPOINT);
+    CreateReservation(filters) {
+        return Api(baseURL).post(ENDPOINT, filters);
     }
 }

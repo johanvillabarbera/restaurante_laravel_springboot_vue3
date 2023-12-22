@@ -17,17 +17,17 @@ export default (URL) => {
         api.defaults.headers.common.Authorization = `Bearer ${token}`;
     }
 
-    // api.interceptors.response.use(
-    //     (response) => response,
-    //     (error) => {
-    //         if (error.response.status === 401) {
-    //             toaster.error('Forced logout. Unauthorized action');
-    //             store.dispatch(`auth/${authConstant.LOGOUT}`);
-    //             router.push({ name: "home" });
-    //         }
-    //         return Promise.reject(error);
-    //     }
-    // );
+    api.interceptors.response.use(
+        (response) => response,
+        (error) => {
+            console.log("aaaaa");
+            if (error.response.status === 401) {
+                store.dispatch(`auth/${authConstant.LOGOUT}`);
+                router.push({ name: "home" });
+            }
+            return Promise.reject(error);
+        }
+    );
 
     return api
 }

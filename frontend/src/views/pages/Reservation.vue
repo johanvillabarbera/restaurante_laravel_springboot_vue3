@@ -35,6 +35,7 @@
                       <div class="chair chair-bottom"></div>
                       <div class="chair chair-left"></div>
                       <div v-if="!table.meets_filters" class="table-status"></div>
+                      <div v-if="table.estado_reserva" class="table-status"></div>
                     </div>
                   </div>
                 </div>
@@ -66,7 +67,7 @@
 
     // Seteamos el objeto de filtros
     let filters_URL = {
-        turn: '',
+        turnID: '',
         capacity: '',
         date: '',
         tableID: ''
@@ -85,21 +86,22 @@
     // Creamos el estado y comprobamos si hay filtros para usar useTableFilters
     
     const state = reactive({
-      tables: filters_URL.turn !== '' ? useTableFilters(filters_URL) : [],
+      tables: filters_URL.turn_hour !== '' ? useTableFilters(filters_URL) : [],
     }) 
 
-    const aplicarFiltros = (filters) => {
-      console.log(filters);
+    const aplicarFiltros = async (filters) => {
       const filters_64 = btoa(JSON.stringify(filters));
       router.push({ name: 'reservationFilters', params: { filters: filters_64 } });
-      state.tables = useTableFilters(filters);
+      state.tables = await useTableFilters(filters);
       console.log('aplicarFiltros');
+
+      filters_URL = JSON.parse(atob(filters_64));
     }
 
 
     const tableClasses = computed(() => {
       return state.tables.map(table => {
-
+        console.log(table);
         // Comprobamos que este disponible
         if (table.estado_mesa) {
           return 'table table-no-disponible';
@@ -107,6 +109,7 @@
 
         // Comprobamos que no este reservada
         if (table.estado_reserva) {
+          console.log('entreeeee a estado reservaa' + table.tableID);
           return 'table table-reservada';
         }
 
@@ -123,7 +126,6 @@
 
     const detectClickTable = (table) => {
       filters_URL.tableID = table.tableID;
-
       alert.value = true;
       if (table.estado_reserva) {
         console.log("Mesa no disponible");

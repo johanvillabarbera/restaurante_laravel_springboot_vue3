@@ -59,6 +59,8 @@ public class BookingController {
     public ResponseEntity<Booking> createBooking(@RequestBody Booking booking, HttpServletRequest request) {
         try {
             
+            logger.info("Booking: " + booking);
+
             // Comprueba si hay body si no hay enviamos que faltan datos
             if (booking == null) {
                 return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -85,7 +87,7 @@ public class BookingController {
 
 
             Booking _booking = bookingRepository.save(new Booking(booking.getBookingID(), user.getClientID(),
-                    booking.getTableID(), booking.getMenuID(), booking.getTurnID(), booking.getBooking_day(), booking.getDiners_number(),
+                    booking.getTableID(), booking.getTurnID(), booking.getMenuID(), booking.getBooking_day(), booking.getDiners_number(),
                     booking.getStatus()));
             
             // SAVE RESERVATION EVENT

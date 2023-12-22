@@ -3,12 +3,12 @@ import tablesService from '../../services/client/tablesService';
 
 // I need to pass filters to useTableFilters
 
-export const useTableFilters = (filters) => {
+export const useTableFilters = async (filters) => {
     console.log(filters);
     const tables = ref([]);
     const error = ref(null);
 
-    tablesService.GetTables(filters)
+    await tablesService.GetTables(filters)
     .then(res => { tables.value = res.data })
     .catch(error => console.error(error))
     console.log(tables);

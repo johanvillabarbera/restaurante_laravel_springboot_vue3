@@ -51,7 +51,8 @@
                   :done="step > 3"
                   class="fixed-size-step"
                 >
-                  <q-select color="dark" filled v-model="turnOption" :options="optionsTurn" label="Filled" />
+                  <q-select color="dark" filled v-model="turnOption" :options="optionsTurn" option-value="turnID"
+                  option-label="turn" label="Filled" />
 
                   <q-stepper-navigation>
                     <q-btn v-if="turnOption" @click="step = 4;" color="dark" label="Continue" />
@@ -108,13 +109,13 @@
 
     const optionsMeal = computed(() => store.getters['turns/GetTurns'].map(item => item.meal));
     let optionsTurn = ref([]);
-    const optionsTurnDB = computed(() => store.getters['turns/GetTurns'].map(item => {return {meal: item.meal, turn: item.turn_hour}}));
+    const optionsTurnDB = computed(() => store.getters['turns/GetTurns'].map(item => {return {meal: item.meal, turn: item.turn_hour, turnID: item.turnID}}));
 
-    const optionsCapacity = [1, 2, 4, 8, 12]
+    const optionsCapacity = [1, 2, 4, 8]
 
 
     const loadTurns = () => {
-      optionsTurn = optionsTurnDB.value.filter(turn => turn.meal === mealOption.value).map(function(obj) {return obj.turn});
+      optionsTurn = optionsTurnDB.value.filter(turn => turn.meal === mealOption.value).map(function(obj) {return {turn: obj.turn, turnID: obj.turnID}});
     }
 
     // Observamos los cambios en los filtros y actualizamos el objeto
@@ -132,9 +133,15 @@
 
     // Emitimos los filtros al padre
     const emitirFiltros = () => {
-      console.log(state.filters);
+      const table_filters = {
+        date: state.filters.date,
+        turn: state.filters.turn.turn,
+        turnID: state.filters.turn.turnID,
+        capacity: state.filters.capacity,
+        tableID: ''
+      }
         // Emit the filters to the parent @filters
-        emit('filters', state.filters);
+        emit('filters', table_filters);
     }
 
 </script>

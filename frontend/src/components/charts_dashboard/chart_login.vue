@@ -11,6 +11,22 @@ Chart.register(...registerables);
 
 const chartCanvas = ref(null);
 
+const props = defineProps({
+   data: Array,
+   title: String
+});
+
+
+
+let days, values = [];
+
+if(props.data) {
+    console.log(props.data);
+    days = props.data.map(element => element.day);
+    values = props.data.map(element => element.value);
+    console.log(days);
+}
+
 // CONSULTA
 
 // SELECT *
@@ -42,12 +58,12 @@ onMounted(() => {
     new Chart(ctx, {
         type: 'line',
         data: {
-            labels: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio'],
+            labels: days,
             datasets: [{
-                label: 'Mi primer dataset',
+                label: props.title,
                 backgroundColor: 'rgb(255, 99, 132)',
                 borderColor: 'rgb(255, 99, 132)',
-                data: [0, 10, 5, 2, 20, 30, 45],
+                data: values,
             }]
         },
         options: {
@@ -58,7 +74,7 @@ onMounted(() => {
                 },
                 title: {
                     display: true,
-                    text: 'Gráfico de Línea'
+                    text: props.title
                 }
             }
         }

@@ -6,13 +6,13 @@
         </q-card-section>
 
         <q-select color="dark" bg-color="grey" filled v-model="menuOption" 
-        :options="optionsMenus" label="Selecciona un menú" style="padding: 0.5rem;"/>
+        :options="optionsMenus" option-value="id" option-label="name" label="Selecciona un menú" style="padding: 0.5rem;"/>
 
         <q-card-section class="q-pt-none">
             <h5>Tus preferencias</h5>
 
             <p>Fecha: {{ props.filters.date }}</p>
-            <p>Turno: {{ props.filters.turnID }}</p>
+            <p>Turno: {{ props.filters.turn }}</p>
             <p>Capacidad: {{ props.filters.capacity }}</p>
         </q-card-section>
 
@@ -42,12 +42,14 @@
     }
 
     const reservar = () => {
-        props.filters.menu = menuOption;
+        props.filters.menuID = menuOption.value.id;
+        props.filters.booking_day = props.filters.date;
+        props.filters.diners_number = props.filters.capacity;
         console.log(props.filters);
         store.dispatch(`reservation/${clientConstant.CREATE_RESERVATION}`, props.filters);
     }
 
     store.dispatch(`menu/${clientConstant.INITIALIZE_MENU}`);
     const menuOption = ref(null);
-    const optionsMenus = computed(() => store.getters['menu/GetMenus'].map(item => item.name));
+    const optionsMenus = computed(() => store.getters['menu/GetMenus'].map(item => { return { name: item.name, id: item.menuID }}));
 </script>

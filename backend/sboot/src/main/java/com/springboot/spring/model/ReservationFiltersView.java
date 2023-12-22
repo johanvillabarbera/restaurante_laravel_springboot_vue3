@@ -30,11 +30,11 @@ public class ReservationFiltersView {
     @Column(name = "turn_hour")
     private String turn_hour;
 
-    @Column(name = "booking_day")
-    private Date booking_day;
+    // @Column(name = "booking_day")
+    // private Date booking_day;
 
-    @Column(name = "estado_mesa")
-    private Boolean estado_mesa;
+    // @Column(name = "estado_mesa")
+    // private Boolean estado_mesa;
 
     @Column(name = "estado_reserva")
     private Boolean estado_reserva;
