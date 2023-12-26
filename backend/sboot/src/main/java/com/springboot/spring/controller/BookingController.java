@@ -38,6 +38,12 @@ import java.util.Date;
 import com.springboot.spring.model.Booking;
 import com.springboot.spring.repository.BookingRepository;
 
+// ENVIO DE EMAIL
+import com.springboot.spring.service.EmailService;
+import com.springboot.spring.model.email.EmailConfirmBooking;
+import com.springboot.spring.model.email.EmailDataConfirmBooking;
+import java.text.SimpleDateFormat;
+
 @CrossOrigin(origins = "http://bellidel.eu:8000")
 @RestController
 @RequestMapping("/booking")
@@ -45,6 +51,10 @@ public class BookingController {
 
     // LOGS
     private static final Logger logger = LoggerFactory.getLogger(UserController.class);
+
+    // EMAIL
+    @Autowired
+    private EmailService emailService;
 
     @Autowired
     UserRepository userRepository;
@@ -61,40 +71,33 @@ public class BookingController {
             
             logger.info("Booking: " + booking);
 
-            // Comprueba si hay body si no hay enviamos que faltan datos
             if (booking == null) {
                 return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
             }
 
             UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication()
-                    .getPrincipal();
+                                        .getPrincipal();
             User user = userRepository.findByUsername(userDetails.getUsername()).get();
 
-            // logger.info("UserDetails: " + user);
-
-            // Comprueba si la mesa esta ocupada
+            // COMPROBAMOS ESTADO DE MESA
             List<Booking> bookingList = bookingRepository.findBookingByBookingDayAndTurnIDAndTableID(booking.getBooking_day(), booking.getTurnID(), booking.getTableID());
-
-            // logger.info("BookingList: " + bookingList);
-
             if (!bookingList.isEmpty()) {
                 return new ResponseEntity<>(HttpStatus.CONFLICT);
             }
 
-            // Setea bookingId como 0 y getstatus como 0
+            // ALMACENAMOS LA RESERVA
             booking.setBookingID(0);
             booking.setStatus(0);
-
 
             Booking _booking = bookingRepository.save(new Booking(booking.getBookingID(), user.getClientID(),
                     booking.getTableID(), booking.getTurnID(), booking.getMenuID(), booking.getBooking_day(), booking.getDiners_number(),
                     booking.getStatus()));
             
-            // SAVE RESERVATION EVENT
+            // ALMACENAMOS EL EVENTO DE RESERVA
             UserEventTable userEventTable = new UserEventTable();
 
-             String ipAddress = request.getRemoteAddr(); // Obtains IP user
-             String userAgent = request.getHeader("User-Agent"); // Obtains User Agent
+            String ipAddress = request.getRemoteAddr(); 
+            String userAgent = request.getHeader("User-Agent"); 
 
             userEventTable.setUserID(user.getClientID());
             userEventTable.setEventType("RESERVATION");
@@ -104,6 +107,41 @@ public class BookingController {
             userEventTable.setUserAgent(userAgent);
 
             userEventTableRepository.save(userEventTable);
+
+            // ENVIAMOS EL CORREO AL USUARIO
+            EmailConfirmBooking email = new EmailConfirmBooking();
+
+            email.setToken("asdadasdvs6eO1JYwXPvjIfu=cA9uKCJViUDwIzJmLffQWb!i-=DwBcywenAt?VR2CgRamVeIH=y5OJFO9E-I06!3?WFFj9S9AFQvX02gXsfOTI6jawIxcNVW!LqjDi5RfkJ8CRiYmR--??F3=1ZLzYeNPGHs/YArqJ-dInIrE4fv13o?bD0CYx54PK=?zn0C0-a?=wV9fUdmzJ2j8A/IOfjQj?aA44rBCp2H=GDkhKpnSUgqnUW51ITj19Wgb6f");
+            email.setFrom("admin@bellidel.eu");
+            email.setTo(user.getEmail());
+            email.setSubject("Confirmación de reserva");
+            email.setEmailType("createBooking");
+
+            EmailDataConfirmBooking emailData = new EmailDataConfirmBooking();
+            emailData.setName(user.getName());
+            
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+            String strDate = dateFormat.format(booking.getBooking_day());
+
+            emailData.setDate(strDate);
+            emailData.setTurn(booking.getTurnID().toString());
+            emailData.setCapacity(booking.getDiners_number());
+
+            email.setEmailData(emailData);
+            logger.info("Email: " + email.toString());
+            logger.info("EmailData: " + email.getToken());
+            logger.info("EmailData: " + email.getFrom());
+            logger.info("EmailData: " + email.getTo());
+            logger.info("EmailData: " + email.getSubject());
+            logger.info("EmailData: " + email.getEmailType());
+            logger.info("EmailData: " + email.getEmailData().getName());
+            logger.info("EmailData: " + email.getEmailData().getDate());
+            logger.info("EmailData: " + email.getEmailData().getTurn());
+            logger.info("EmailData: " + email.getEmailData().getCapacity());
+            
+            // EmailConfirmBooking email_confirm = new EmailConfirmBooking();
+
+            emailService.sendEmailConfirmBooking(email);
 
             return new ResponseEntity<>(null, HttpStatus.CREATED);
         } catch (Exception e) {

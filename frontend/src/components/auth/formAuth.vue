@@ -104,6 +104,16 @@ const submitForm = async () => {
 
 }
 
+// Realizar login o register presionando Enter
+
+const keyPress = (event) => {
+  if (event.keyCode === 13) {
+    props.isLogin ? login() : register();
+  }
+};
+
+window.addEventListener('keydown', keyPress);
+
 const login = () => {
     const data = {
         username: state.username,
@@ -113,12 +123,9 @@ const login = () => {
     submitForm() 
     ? emit('send', data)
     : undefined;
-
-    // emit('send', data);
 }
 
 const checkRegister = () => {
-  // Comprueba que esten todos los campos y que las contraseñas sean iguales
 
   if (!state.username, !state.password, !state.name, !state.email, !state.phone, !state.address, !state.birth_date) {
     $q.notify({
@@ -153,10 +160,9 @@ const register = () => {
     checkRegister()
     ? emit('send', data)
     : undefined;
-    // emit('send', data);
 }
 
-const { doLogin } = mapActions('auth', ['doLogin'])
+
 </script>
 
 <style scoped>

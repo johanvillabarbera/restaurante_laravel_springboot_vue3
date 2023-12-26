@@ -1,5 +1,5 @@
 <template>
-    <q-dialog v-model="props.model">
+    <q-dialog v-model="props.model" :style="{ backdropFilter: 'blur(5px)', backgroundColor: 'rgba(0, 0, 0, 0.5)' }">
         <q-card style="width: 700px">
         <q-card-section>
             <div class="text-h6">Confirmar reserva</div>
@@ -53,3 +53,12 @@
     const menuOption = ref(null);
     const optionsMenus = computed(() => store.getters['menu/GetMenus'].map(item => { return { name: item.name, id: item.menuID }}));
 </script>
+
+
+<style>
+.q-dialog__backdrop {
+  -webkit-backdrop-filter: blur(5px) !important;
+  backdrop-filter: blur(5px) !important;
+  background-color: rgba(0, 0, 0, 0.5) !important; 
+}
+</style>
