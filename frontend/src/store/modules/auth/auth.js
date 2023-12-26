@@ -106,6 +106,7 @@ export const auth = {
             if (payload.status === 200) {
                 console.log('logout spring ok');
                 localStorage.removeItem('token');
+                localStorage.removeItem('isAdmin');
             }
             if (payload.status_admin === 200) {
                 console.log('logout laravel ok');

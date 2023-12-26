@@ -8,7 +8,6 @@ const ENDPOINT = 'tables/filters';
 export default {
     
     GetTables(filters) {
-        console.log(filters);
         return Api(baseURL).get(ENDPOINT, { params: filters });
     }
 }

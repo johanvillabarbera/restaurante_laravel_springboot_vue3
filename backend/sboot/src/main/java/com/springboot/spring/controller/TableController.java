@@ -81,26 +81,48 @@ public class TableController {
             _tableQueryParam.setDate(_tableQueryParam.getDate());
             _tableQueryParam.setTurn(_tableQueryParam.getTurn());
 
-            StringBuilder sqlBuilder = new StringBuilder("SELECT *, CASE WHEN ");
+            // StringBuilder sqlBuilder = new StringBuilder("SELECT *, CASE WHEN ");
 
-            if (_tableQueryParam.getCapacity() != null) {
-                sqlBuilder.append("capacity = ").append(_tableQueryParam.getCapacity());
-            }
+            // if (_tableQueryParam.getCapacity() != null) {
+            //      sqlBuilder.append("capacity = ").append(_tableQueryParam.getCapacity());
+            //     //sqlBuilder.append("capacity = ").append(4);
+            // }
 
-            if (_tableQueryParam.getDate() != null) {
-                sqlBuilder.append(" AND ( booking_day = '").append(_tableQueryParam.getDate()).append("' OR booking_day IS NULL ) THEN 'true' ELSE 'false' END as meets_filters FROM ReservationFilters ");
-            }
+            // if (_tableQueryParam.getDate() != null) {
+            //     sqlBuilder.append(" AND ( booking_day != '").append(_tableQueryParam.getDate()).append("' OR booking_day IS NULL ) THEN 'true' ELSE 'false' END as meets_filters, CASE WHEN booking_day = '").append(_tableQueryParam.getDate()).append("' THEN 'true' ELSE 'false' END as estado_reserva");
+            // }
 
-            if (_tableQueryParam.getTurn() != null) {
-                sqlBuilder.append(" WHERE turn_hour = '").append(_tableQueryParam.getTurn()).append("'");
-            }
+            // if (_tableQueryParam.getTurn() != null) {
+            //     sqlBuilder.append(" FROM ReservationFilters WHERE turn_hour = '").append(_tableQueryParam.getTurn()).append("' AND (booking_day = '").append(_tableQueryParam.getDate()).append("' OR booking_day != '").append(_tableQueryParam.getDate()).append("' OR booking_day IS NULL )");
+            // }
 
-            if (_tableQueryParam.getDate() != null) {
-                sqlBuilder.append(" AND (booking_day = '").append(_tableQueryParam.getDate()).append("' OR booking_day IS NULL)");
-            }
+            StringBuilder sqlBuilder = new StringBuilder();
 
-            sqlBuilder.append(" ORDER BY tableID");
+            // Base de la consulta SQL
+            sqlBuilder.append("SELECT ")
+                .append("t.tableID, ")
+                .append("t.capacity, ")
+                .append("t.location, ")
+                .append("t.availability, ")
+                .append("tt.turnID, ")
+                .append("tt.turn_hour, ")
+                .append("CASE WHEN b.bookingID IS NOT NULL THEN 'true' ELSE 'false' END AS estado_reserva, ")
+                .append("CASE WHEN t.capacity = ")
+                .append(_tableQueryParam.getCapacity()) 
+                .append(" THEN 'true' ELSE 'false' END AS meets_filters ")
+                .append("FROM tables t ")
+                .append("CROSS JOIN turns tt ")
+                .append("LEFT JOIN (SELECT * FROM bookings WHERE booking_day = '")
+                .append(_tableQueryParam.getDate()) // Asumiendo que getDate() retorna '2023-12-26'
+                .append("') b ON t.tableID = b.tableID AND tt.turnID = b.turnID ")
+                .append("WHERE tt.turn_hour = '")
+                .append(_tableQueryParam.getTurn()) // Asumiendo que getTurnHour() retorna '12:00 - 14:00'
+                .append("' ORDER BY t.tableID");
 
+            // if (_tableQueryParam.getDate() != null) {
+            //     sqlBuilder.append(" AND (booking_day = '").append(_tableQueryParam.getDate()).append("' OR booking_day IS NULL)");
+            // }
+            
             String sql = sqlBuilder.toString();
 
             logger.info(sql);

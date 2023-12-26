@@ -10,8 +10,8 @@ export const reservation = {
         [clientConstant.CREATE_RESERVATION]: async (store, payload) => {
             try {
                 console.log(payload);
-                // const response = await reservationService.CreateReservation(payload);
-                // store.commit(clientConstant.CREATE_RESERVATION, response.data);
+                const response = await reservationService.CreateReservation(payload);
+                store.commit(clientConstant.CREATE_RESERVATION, response.data);
             } catch (error) {
                 console.error(error);
             }

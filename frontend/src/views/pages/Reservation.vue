@@ -27,7 +27,7 @@
                 <!-- Renderizar datos aquí -->
                 <div class="tables-container">
                   <div class="table-container" v-for="(table, index) in state.tables" :key="table.id" @click="detectClickTable(table)">
-                    <reservationModal @close="closeModal()" :model="alert" :filters="filters_URL"></reservationModal>
+                    <reservationModal @close="closeModal()" :model="alert"  :filters="filters_URL" class="modal-backdrop" />
                     <div :class=" tableClasses[index]">
                       <!-- Mesa {{ item.tableID }} -->
                       <div class="chair chair-top"></div>
@@ -35,6 +35,7 @@
                       <div class="chair chair-bottom"></div>
                       <div class="chair chair-left"></div>
                       <div v-if="!table.meets_filters" class="table-status"></div>
+                      <div v-if="table.estado_reserva" class="table-status"></div>
                     </div>
                   </div>
                 </div>
@@ -55,7 +56,7 @@
 <script setup>
     import tableFilters from '../../components/tables/tableFilters.vue';
     import { useRouter, useRoute } from 'vue-router';
-    import { reactive, computed, ref } from 'vue';
+    import { reactive, computed, ref, watch } from 'vue';
     import { useTableFilters } from '../../composables/tables/useTable';
     import reservationModal from '../../components/reservation/reservationModal.vue';
 
@@ -66,40 +67,49 @@
 
     // Seteamos el objeto de filtros
     let filters_URL = {
-        turn: '',
+        turnID: '',
         capacity: '',
         date: '',
         tableID: ''
     };
 
-    // Si hay filtros en la URL, los cargamos
-    try {
-      const { filters } = route.params;
-      if (filters) {
-        filters_URL = JSON.parse(atob(filters));
-      }
-    } catch (error) {
-      console.error(error);
-    }
-
-    // Creamos el estado y comprobamos si hay filtros para usar useTableFilters
-    
     const state = reactive({
-      tables: filters_URL.turn !== '' ? useTableFilters(filters_URL) : [],
+      tables: filters_URL.turn_hour !== '' ? useTableFilters(filters_URL) : [],
     }) 
 
-    const aplicarFiltros = (filters) => {
-      console.log(filters);
+    // Si hay filtros en la URL, los cargamos
+    // try {
+    //   const { filters } = route.params;
+    //   console.log(route.params);
+    //   if (filters) {
+    //     filters_URL = JSON.parse(atob(filters));
+    //   }
+    // } catch (error) {
+    //   console.error(error);
+    // }
+
+    
+  
+
+    const aplicarFiltros = async (filters) => {
       const filters_64 = btoa(JSON.stringify(filters));
       router.push({ name: 'reservationFilters', params: { filters: filters_64 } });
-      state.tables = useTableFilters(filters);
+      state.tables = await useTableFilters(filters);
       console.log('aplicarFiltros');
     }
+
+    watch(() => route.params, (newParams) => {
+      // Descomponer los nuevos parámetros y actualizar los filtros y la tabla
+      if (newParams.filters) {
+        const newFilters = JSON.parse(atob(newParams.filters));
+        aplicarFiltros(newFilters);
+      }
+    }, { immediate: true });
 
 
     const tableClasses = computed(() => {
       return state.tables.map(table => {
-
+        console.log(table);
         // Comprobamos que este disponible
         if (table.estado_mesa) {
           return 'table table-no-disponible';
@@ -107,6 +117,7 @@
 
         // Comprobamos que no este reservada
         if (table.estado_reserva) {
+          console.log('entreeeee a estado reservaa' + table.tableID);
           return 'table table-reservada';
         }
 
@@ -121,14 +132,17 @@
     });
 
 
-    const detectClickTable = (table) => {
+    const detectClickTable = async (table) => {
+      console.log(table);
+      console.log(filters_URL);
       filters_URL.tableID = table.tableID;
-
-      alert.value = true;
+      
       if (table.estado_reserva) {
         console.log("Mesa no disponible");
       } else if (!table.meets_filters) {
         console.log("No cumple con los requisitos");
+      } else {
+        alert.value = true;
       }
     
     }
@@ -268,6 +282,10 @@
 
 body {
   background: linear-gradient(to bottom, #f9f9f9, #e0e0e0)
+}
+
+.modal-backdrop {
+  backdrop-filter: blur(5px); 
 }
 
 </style>
