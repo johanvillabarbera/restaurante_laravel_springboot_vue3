@@ -1,35 +1,28 @@
 <template>
-    <!-- <q-select filled v-model="model" :options="state.menu" label="Filled" />
-    <TableCard :data="state.tables"/> -->
     <q-layout>
     <q-page-container>
       <q-page>
         <q-grid class="row">
-          <!-- Columna de filtros a la izquierda -->
           <q-col cols="4" sm="4">
             <div class="q-pa-md">
               <tableFilters @filters="aplicarFiltros" :filters="filters_URL" />
             </div>
           </q-col>
           <q-grid class="column">
-          <!-- Div para mostrar el contenido de los filtros seleccionados -->
           <q-col cols="8" sm="8" class="row inline">
             <q-chip v-if="filters_URL" v-for="filter in filters_URL" color="dark" text-color="orange" icon="bookmark">
               {{ filter }}
             </q-chip>
           </q-col>
 
-          <!-- Div grande para mostrar los datos -->
           <q-col cols="8" sm="8">
             <div class="q-pa-md full-width">
-              <!-- Aquí se mostrarán los datos -->
               <div v-if="state.tables.length > 0">
-                <!-- Renderizar datos aquí -->
                 <div class="tables-container">
                   <div class="table-container" v-for="(table, index) in state.tables" :key="table.id" @click="detectClickTable(table)">
-                    <reservationModal @close="closeModal()" :model="alert"  :filters="filters_URL" class="modal-backdrop" />
+                    <reservationModal @close="closeModal()" :model="alert" :filters="filters_URL" class="modal-backdrop" />
                     <div :class=" tableClasses[index]">
-                      <!-- Mesa {{ item.tableID }} -->
+
                       <div class="chair chair-top"></div>
                       <div class="chair chair-right"></div>
                       <div class="chair chair-bottom"></div>
@@ -39,7 +32,7 @@
                     </div>
                   </div>
                 </div>
-                <!-- {{ state.tables }} -->
+
               </div>
               <div v-else>
                 Cargando datos...
@@ -67,6 +60,7 @@
 
     // Seteamos el objeto de filtros
     let filters_URL = {
+        turn: '',
         turnID: '',
         capacity: '',
         date: '',
@@ -75,27 +69,12 @@
 
     const state = reactive({
       tables: filters_URL.turn_hour !== '' ? useTableFilters(filters_URL) : [],
-    }) 
-
-    // Si hay filtros en la URL, los cargamos
-    // try {
-    //   const { filters } = route.params;
-    //   console.log(route.params);
-    //   if (filters) {
-    //     filters_URL = JSON.parse(atob(filters));
-    //   }
-    // } catch (error) {
-    //   console.error(error);
-    // }
-
-    
-  
+    })   
 
     const aplicarFiltros = async (filters) => {
       const filters_64 = btoa(JSON.stringify(filters));
       router.push({ name: 'reservationFilters', params: { filters: filters_64 } });
       state.tables = await useTableFilters(filters);
-      console.log('aplicarFiltros');
     }
 
     watch(() => route.params, (newParams) => {
@@ -133,9 +112,14 @@
 
 
     const detectClickTable = async (table) => {
+      const { filters } = route.params;
+      if (filters) {
+        filters_URL = JSON.parse(atob(filters));
+      }
+
+      filters_URL.tableID = table.tableID;
       console.log(table);
       console.log(filters_URL);
-      filters_URL.tableID = table.tableID;
       
       if (table.estado_reserva) {
         console.log("Mesa no disponible");

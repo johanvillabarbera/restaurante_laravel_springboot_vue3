@@ -11,7 +11,6 @@ import { useStore } from 'vuex';
     const login = (data) => {
         store.dispatch(`auth/${authConstant.LOGIN}`, data);
     }
-    console.log(login);
 </script>
 
 <style lang="css" scoped>

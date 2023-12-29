@@ -1,6 +1,7 @@
 import authConstant from './authConstant.js';
 import AuthService from '../../../services/auth/authService.js';
 import router from '../../../router/index.js'
+import { Notify } from 'quasar';
 
 export const auth = {
     namespaced: true,
@@ -23,7 +24,11 @@ export const auth = {
                     }
                 }
             } catch (error) {
-                console.error('Username or password incorrect');
+                // console.error('Username or password incorrect');
+                Notify.create({
+                    type: 'negative',
+                    message: 'Usuario o contraseña incorrectos'
+                });
             }
         },//LOGIN
 

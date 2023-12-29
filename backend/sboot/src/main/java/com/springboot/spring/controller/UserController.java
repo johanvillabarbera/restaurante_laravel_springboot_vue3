@@ -107,10 +107,12 @@ public class UserController {
             if (userRepository.existsByUsername(user.getUsername()) == 0) {
                 return new ResponseEntity<>(HttpStatus.NO_CONTENT);
             }
-            
+
             Authentication authentication = authenticationManager.authenticate(
             new UsernamePasswordAuthenticationToken(user.getUsername(), user.getPassword()));
-            
+
+
+
             SecurityContextHolder.getContext().setAuthentication(authentication);
             
             String jwt = jwtUtils.generateJwtToken(authentication);
@@ -136,7 +138,7 @@ public class UserController {
             
             return new ResponseEntity<>(userToken, HttpStatus.OK);
         } catch (Exception e) {
-            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);
         }
     }
 
