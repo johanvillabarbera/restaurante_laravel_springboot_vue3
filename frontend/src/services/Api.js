@@ -20,7 +20,6 @@ export default (URL) => {
     api.interceptors.response.use(
         (response) => response,
         (error) => {
-            console.log("aaaaa");
             if (error.response.status === 401) {
                 store.dispatch(`auth/${authConstant.LOGOUT}`);
                 router.push({ name: "home" });

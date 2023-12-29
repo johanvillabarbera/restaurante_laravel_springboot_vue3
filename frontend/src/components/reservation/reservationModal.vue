@@ -26,7 +26,7 @@
 </template>
 
 <script setup>
-    import { defineProps, getCurrentInstance, ref, computed, reactive } from 'vue'
+    import { defineProps, getCurrentInstance, ref, computed, reactive, watch } from 'vue'
     import { useStore } from 'vuex';
     import clientConstant from '../../store/modules/client/clientConstant';
 
@@ -34,19 +34,26 @@
     const store = useStore();
 
     let props = defineProps(['model','filters'])
-
     const emit = defineEmits(['close']);
+
+    const localFilters = reactive({
+        ...props.filters
+    });
+
+    watch(() => props.filters, (newFilters) => {
+        Object.assign(localFilters, newFilters);
+    }, { deep: true });
 
     const close = () => {
         emit('close', true)
     }
 
     const reservar = () => {
-        props.filters.menuID = menuOption.value.id;
-        props.filters.booking_day = props.filters.date;
-        props.filters.diners_number = props.filters.capacity;
-        console.log(props.filters);
-        store.dispatch(`reservation/${clientConstant.CREATE_RESERVATION}`, props.filters);
+        localFilters.menuID = menuOption.value.id;
+        localFilters.booking_day = localFilters.date;
+        localFilters.diners_number = localFilters.capacity;
+        console.log(localFilters);
+        store.dispatch(`reservation/${clientConstant.CREATE_RESERVATION}`, localFilters);
     }
 
     store.dispatch(`menu/${clientConstant.INITIALIZE_MENU}`);

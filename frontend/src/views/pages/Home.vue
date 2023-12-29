@@ -3,13 +3,25 @@
         <!-- <h1 class="text-brown-10">Bienvenido a VibeRest</h1> -->
         <!-- <img src="../../../public/Quasar_Logo.png" alt=""> -->
         <section class="content_uno_home">
-            <div class="content">
-                <img src="https://picsum.photos/id/1060/536/354?blur=2" alt="img uno">
-                <p class="text-dark">Iníciate en un viaje culinario donde cada plato cuenta una historia y cada sabor te transporta a un rincón diferente del mundo. 
-                    En VibeRest, creemos que la alta cocina es más que comida: es una experiencia. Nuestro restaurante es un refugio para los entendidos 
-                    y aquellos que aprecian el arte de la gastronomía.
-                </p>
-            </div>
+            <q-carousel
+                v-model="slide"
+                animated
+                arrows
+                infinite
+                navigation
+                style="height: 400px; width: 90%; margin: 20px auto; background-color: black; color: white; border-radius: 10px;">
+                
+                <q-carousel-slide
+                    v-for="(image, index) in images"
+                    :key="index"
+                    :name="index"
+                    :img-src="image.src">
+                    <div class="custom-caption">
+                        <p>{{ image.caption }}</p>
+                    </div>
+                </q-carousel-slide>
+
+            </q-carousel>
         </section>
     </div>
     <MenuList @emitAction="redirectReservation"></MenuList>
@@ -18,6 +30,8 @@
 <script setup>
 import MenuList from '../menus/menusList.vue'
 import { useRouter } from 'vue-router';
+import { ref } from 'vue';
+
     const router = useRouter();
 
     const redirectReservation = (menu) => {
@@ -37,6 +51,15 @@ import { useRouter } from 'vue-router';
         actualDate.setDate(actualDate.getDate() + ONE_MORE_DAY)
         return actualDate
     }
+
+    const images = ref([
+    { src: '../public/slid1.jpg', caption: 'Iníciate en un viaje culinario...' },
+    { src: '../public/slid2.jpg', caption: 'Iníciate en un viaje culinario...' },
+
+])
+
+const slide = ref(0)
+
 </script>
 
 <style lang="css" scoped>
@@ -67,7 +90,17 @@ import { useRouter } from 'vue-router';
     }
 
     body {
-        background: linear-gradient(to bottom, #f9f9f9, #e0e0e0);
+        background: linear-gradient(to bottom, #333333, #1a1a1a);
     }
+
+    .custom-caption {
+    position: absolute;
+    bottom: 20px;
+    left: 20px;
+    color: white;
+    background-color: rgba(0, 0, 0, 0.5);
+    padding: 10px;
+    border-radius: 5px;
+}
 
 </style>
