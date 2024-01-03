@@ -13,4 +13,10 @@ export default {
     UPDATE_MENUS: "UpdateMenusAdmin",
     CREATE_MENU: "CreateMenuAdmin",
     DELETE_MENU: "DeleteMenuAdmin",
+
+    //RESERVATION
+    INITIALIZE_RESERVATIONS: "InitializeReservations",
+    INITIALIZE_ONE_RESERVATION: "InitializeOneReservation",
+    DELETE_RESERVATION: "DeleteReservation",
+    UPDATE_RESERVATION: "UpdateReservation",
 }

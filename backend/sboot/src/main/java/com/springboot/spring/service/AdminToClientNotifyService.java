@@ -20,5 +20,9 @@ public class AdminToClientNotifyService {
     public void NotifyTables() {
         template.convertAndSend("/topic", "Table creado");
     }
+
+    public void NotifyReservations() {
+        template.convertAndSend("/topic", "Reserva confirmada");
+    }
     
 }

@@ -36,6 +36,15 @@ import com.springboot.spring.security.jwt.AuthTokenFilter;
 import com.springboot.spring.model.BlacklistToken;
 import com.springboot.spring.model.UserEventTable;
 import java.util.Date;
+import com.springboot.spring.model.UnverifiedUser;
+import com.springboot.spring.repository.UnverifiedUserRepository;
+
+// ENVIO DE EMAIL
+import com.springboot.spring.service.EmailService;
+import com.springboot.spring.model.email.EmailCreateUser;
+import com.springboot.spring.model.email.EmailDataCreateUser;
+import java.text.SimpleDateFormat;
+import com.springboot.spring.service.GenerateTemporalToken;
 
 @CrossOrigin(origins = "http://bellidel.eu:8000")
 @RestController
@@ -66,6 +75,15 @@ public class UserController {
     @Autowired
     private JwtUtils jwtUtils;
 
+    @Autowired
+    private UnverifiedUserRepository unverifiedUserRepository;
+
+    @Autowired
+    private GenerateTemporalToken generateTemporalToken;
+
+    // EMAIL
+    @Autowired
+    private EmailService emailService;
 
     @GetMapping("")
     public ResponseEntity<List<User>> getAllUsers() {
@@ -103,6 +121,10 @@ public class UserController {
     @PostMapping("/login")
     public ResponseEntity<UserWithToken> loginUser(@RequestBody User user, HttpServletRequest request) {
         try {
+            
+            if(unverifiedUserRepository.existsByUsername(user.getUsername()) != 0) {
+                return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+            }
 
             if (userRepository.existsByUsername(user.getUsername()) == 0) {
                 return new ResponseEntity<>(HttpStatus.NO_CONTENT);
@@ -176,7 +198,41 @@ public class UserController {
 
             userEventTableRepository.save(userEventTable);
 
-            //User _user = userRepository.save(new User(user.getClientID(), user.getName(), user.getSurname(), user.getEmail(), user.setPassword(encoder.encode(user.getPassword())), user.getTlf(), user.getAddress(), user.getBirth_date(), user.getIDrol(), user.getUsername()));
+            // generamos un token aleatorio basado en el nombre del usuario y la fecha
+            String _tmp_token = generateTemporalToken.generateToken(20);
+
+
+            // almacenamos el usuario en unverifiedUser
+            UnverifiedUser unverifiedUser = new UnverifiedUser();
+
+            unverifiedUser.setClientID(_user.getClientID());
+            unverifiedUser.setUsername(_user.getUsername());
+            unverifiedUser.setTmp_token(_tmp_token);
+            unverifiedUser.setAdmin_block(0);
+
+            unverifiedUserRepository.save(unverifiedUser);
+
+            // Enviamos el email de confirmación
+            EmailCreateUser email = new EmailCreateUser();
+            EmailDataCreateUser emailData = new EmailDataCreateUser();
+
+            email.setToken("asdadasdvs6eO1JYwXPvjIfu=cA9uKCJViUDwIzJmLffQWb!i-=DwBcywenAt?VR2CgRamVeIH=y5OJFO9E-I06!3?WFFj9S9AFQvX02gXsfOTI6jawIxcNVW!LqjDi5RfkJ8CRiYmR--??F3=1ZLzYeNPGHs/YArqJ-dInIrE4fv13o?bD0CYx54PK=?zn0C0-a?=wV9fUdmzJ2j8A/IOfjQj?aA44rBCp2H=GDkhKpnSUgqnUW51ITj19Wgb6f");
+            email.setFrom("admin@bellidel.eu");
+            email.setTo(_user.getEmail());
+            email.setSubject("Confirmación de registro");
+            email.setEmailType("createAccount");
+
+            emailData.setName(_user.getName());
+            emailData.setUsername(_user.getUsername());
+            emailData.setToken(_tmp_token);
+
+            email.setEmailData(emailData);
+
+            emailService.sendEmailCreateUser(email);
+
+
+
+
             return new ResponseEntity<>(_user, HttpStatus.CREATED);
         } catch (Exception e) {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
@@ -224,6 +280,27 @@ public class UserController {
         } catch (Exception e) {
             System.err.println(e);
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @PostMapping("/confirmAccount")
+    public ResponseEntity<?> confirmAccount(@RequestParam("token") String token) {
+        try {
+
+            
+
+            if (unverifiedUserRepository.existsByTmpToken(token) == 0) {
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            }
+
+            UnverifiedUser unverifiedUser = unverifiedUserRepository.findByTmpToken(token).get();
+
+            unverifiedUserRepository.delete(unverifiedUser);
+
+            return new ResponseEntity<>("Activation_ok",HttpStatus.OK);
+        } catch (Exception e) {
+            System.err.println(e);
+            return new ResponseEntity<>("Activation_error",HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
