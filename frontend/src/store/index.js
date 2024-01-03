@@ -8,6 +8,8 @@ import { reservation } from "./modules/client/reservationClient";
 import { tables } from "./modules/admin/tablesAdmin";
 import { menus } from "./modules/admin/menusAdmin";
 import { auth } from "./modules/auth/auth";
+import { reservations } from "./modules/admin/reservationsAdmin";
+
 export default Vuex.createStore({
     modules: {
         menu: menu,
@@ -15,6 +17,7 @@ export default Vuex.createStore({
         menus: menus,
         turns: turn,
         auth: auth,
-        reservation: reservation
+        reservation: reservation,
+        reservations: reservations
     },
 });

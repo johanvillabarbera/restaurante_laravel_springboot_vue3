@@ -139,7 +139,6 @@ public class BookingController {
             logger.info("EmailData: " + email.getEmailData().getTurn());
             logger.info("EmailData: " + email.getEmailData().getCapacity());
             
-            // EmailConfirmBooking email_confirm = new EmailConfirmBooking();
 
             emailService.sendEmailConfirmBooking(email);
 

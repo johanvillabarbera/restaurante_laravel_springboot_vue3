@@ -29,4 +29,9 @@ public class AdminToClientNotifyController {
     public void notifyTables() {
         adminToClientNotifyService.NotifyTables();
     }
+
+    @GetMapping("/reservations")
+    public void notifyReservations() {
+        adminToClientNotifyService.NotifyReservations();
+    }
 }

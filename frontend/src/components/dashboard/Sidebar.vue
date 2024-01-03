@@ -54,9 +54,9 @@
   },
   {
     icon: 'error',
-    label: 'Spam',
+    label: 'Reservations',
     separator: true,
-    routerLink: '/home'
+    routerLink: '/dashboard/reservations'
   },
   {
     icon: 'settings',

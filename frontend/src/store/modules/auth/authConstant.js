@@ -9,4 +9,5 @@ export default {
     LOGIN: "Login",
     LOGIN_ADMIN: "Login_admin",
     LOGOUT: "Logout",
+    CONFIRM_ACCOUNT: "Confirm_account",
 }

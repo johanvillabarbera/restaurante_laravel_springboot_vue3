@@ -7,6 +7,7 @@ use App\Http\Controllers\TurnsController;
 use App\Http\Controllers\MenusController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\UserEventsController;
+use App\Http\Controllers\ReservationsController;
 
 /*
 |--------------------------------------------------------------------------
@@ -30,6 +31,7 @@ Route::group(['middleware' => ['cors', 'admin']], function () {
     Route::resource('turns', TurnsController::class);
     Route::resource('menus', MenusController::class);
     Route::resource('users', UserController::class);
+    Route::resource('reservations', ReservationsController::class);
     // Route::get('tables/static', [TablesController::class, 'index']);
     Route::get('profile', [UserController::class, 'getUserToken']);
     Route::get('logout', [UserController::class, 'logout']);

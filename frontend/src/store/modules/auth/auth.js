@@ -8,7 +8,8 @@ export const auth = {
     state: {
         user: {},
         isAuth: false,
-        isAdmin: false
+        isAdmin: false,
+        isAccountVerified: false
     },
     actions: {
         [authConstant.LOGIN]: async (store, payload, state) => {
@@ -24,11 +25,18 @@ export const auth = {
                     }
                 }
             } catch (error) {
-                // console.error('Username or password incorrect');
-                Notify.create({
-                    type: 'negative',
-                    message: 'Usuario o contraseña incorrectos'
-                });
+                
+                if (error.response.status === 403) {
+                    Notify.create({
+                        type: 'negative',
+                        message: 'Accede a tu correo para verificar tu cuenta'
+                    });
+                } else if (error.response.status === 401) {
+                    Notify.create({
+                        type: 'negative',
+                        message: 'Usuario o contraseña incorrectos'
+                    });
+                }
             }
         },//LOGIN
 
@@ -52,7 +60,11 @@ export const auth = {
             try {
                 const response = await AuthService.Register(payload);
                 if (response.status === 201) {
-                    store.commit(Constant.ADD_USER, true);
+                    store.commit(authConstant.ADD_USER, true);
+                    Notify.create({
+                        type: 'positive',
+                        message: 'Cuenta creada, revisa tu correo para confirmarla'
+                    });
                 }
             } catch (error) {
                 console.error('Register error');
@@ -71,6 +83,22 @@ export const auth = {
                 console.error(error);
             }
         },//INITIALIZE_PROFILE
+
+        // COnfirm account
+
+        [authConstant.CONFIRM_ACCOUNT]: async (store, payload) => {
+            try {
+                const response = await AuthService.ConfirmAccount(payload);
+                if (response.status === 200) {
+                    Notify.create({
+                        type: 'positive',
+                        message: 'Cuenta confirmada'
+                    });
+                }
+            } catch (error) {
+                console.error(error);
+            }
+        }
 
     },//actions
     mutations: {
@@ -125,6 +153,15 @@ export const auth = {
             
 
         },//LOGOUT
+
+        // Confirm account
+
+        // [authConstant.CONFIRM_ACCOUNT]: (state, payload) => {
+        //     if (payload) {
+        //         router.push({ name: 'login' });
+        //     }
+        // }
+
     },//mutations
     getters: {
         GetProfile: (state) => {

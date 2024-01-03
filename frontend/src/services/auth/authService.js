@@ -11,6 +11,7 @@ const ENDPOINTS = {
     "ENDPOINT_LOGOUT_SPRING": "user/logout",
     "ENDPOINT_LOGOUT_LARAVEL": "logout",
     "ENDPOINT_REGISTER": "user/register",
+    "ENDPOINT_CONFIRM_ACCOUNT": "user/confirmAccount",
 };
 
 export default {
@@ -41,5 +42,9 @@ export default {
 
     Register(data) {
         return Api(baseURLSpring).post(ENDPOINTS.ENDPOINT_REGISTER, data);
-    },//Register
+    },
+
+    ConfirmAccount(token) {
+        return Api(baseURLSpring).post(ENDPOINTS.ENDPOINT_CONFIRM_ACCOUNT + '?token=' + token);
+    }
 }

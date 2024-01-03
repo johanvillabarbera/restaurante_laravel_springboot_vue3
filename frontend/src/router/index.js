@@ -65,6 +65,12 @@ const router = createRouter({
       beforeEnter: authGuards.authGuardAdmin, meta: { requiresAuth: true }
     },
     {
+      path: "/dashboard/reservations",
+      name: "reservations",
+      component: () => import('../views/reservations/DashboardReservations.vue'),
+      beforeEnter: authGuards.authGuardAdmin, meta: { requiresAuth: true }
+    },
+    {
       path: "/login",
       name: "login",
       component: () => import('../views/pages/Login.vue'),
@@ -84,6 +90,18 @@ const router = createRouter({
       component: () => import('../views/pages/Register.vue'),
       beforeEnter: authGuards.noAuthGuard, meta: { requiresAuth: true }
     },
+    // VERIFY ACCOUNT
+    {
+      path: "/confirm_account",
+      name: "confirmAccount",
+      component: () => import('../views/pages/ConfirmAccount.vue'),
+    },
+    {
+      path: "/confirm_account/:token",
+      name: "confirmAccount",
+      component: () => import('../views/pages/ConfirmAccount.vue'),
+      beforeEnter: authGuards.noAuthGuard, meta: { requiresAuth: true }
+    }
   ]
 })
 
