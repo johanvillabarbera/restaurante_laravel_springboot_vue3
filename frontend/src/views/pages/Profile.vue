@@ -1,14 +1,20 @@
 <template>
     <div class="reserva-container">
-      <div class="reserva-card" v-for="reserva in reservas" :key="reserva.id">
+      <div class="reserva-card" v-for="reserva in state.reservas" :key="reserva.id">
         <div class="reserva-header">
           {{ reserva.nombre }}
         </div>
         <div class="reserva-body">
-          <div class="reserva-info"><strong>Día:</strong> {{ reserva.dia }}</div>
-          <div class="reserva-info"><strong>Menú:</strong> {{ reserva.menu }}</div>
-          <div class="reserva-info"><strong>Precio:</strong> {{ reserva.precio }}</div>
-          <div class="reserva-info"><strong>Comensales:</strong> {{ reserva.comensales }}</div>
+          <div class="reserva-info"><strong>Día:</strong> {{ reserva.bookingDay }}</div>
+          <div class="reserva-info"><strong>Menú:</strong> {{ reserva.name_menu }}</div>
+          <div class="reserva-info"><strong>Precio:</strong> {{ reserva.priceTotal }}</div>
+          <div class="reserva-info"><strong>Comensales:</strong> {{ reserva.dinersNumber }}</div>
+          <div class="reserva-estado">
+            <strong>Estado: </strong>
+            <span v-if="reserva.status == 0">Pendiente</span>
+            <span v-else-if="reserva.status == 1">Confirmada</span>
+            <span v-else-if="reserva.status == 2">Cancelada</span>
+          </div>
         </div>
       </div>
     </div>
@@ -16,6 +22,21 @@
   
 
 <script setup>
+
+// USe store to get the user's reservations
+import { useStore } from 'vuex';
+import authConstant from '../../store/modules/auth/authConstant';
+import { computed, getCurrentInstance, reactive } from 'vue';
+
+const store = useStore();
+
+store.dispatch(`auth/${authConstant.BOOKINGS_HISTORY}`);
+
+const state = reactive({
+    reservas: computed(() => store.getters['auth/GetBookingsHistory'])
+});
+
+
 
   const reservas = [
                 { id: 1, nombre: 'Reserva 1', dia: 'Lunes', menu: 'Menú 1', precio: '$10', comensales: 2 },
@@ -61,6 +82,11 @@
 }
 
 .reserva-info {
+  margin-bottom: 5px;
+  color: #555;
+}
+
+.reserva-estado{
   margin-bottom: 5px;
   color: #555;
 }

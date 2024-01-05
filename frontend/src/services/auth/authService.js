@@ -12,6 +12,7 @@ const ENDPOINTS = {
     "ENDPOINT_LOGOUT_LARAVEL": "logout",
     "ENDPOINT_REGISTER": "user/register",
     "ENDPOINT_CONFIRM_ACCOUNT": "user/confirmAccount",
+    "ENDPOINT_BOOKINGS_HISTORY": "user/bookings_history"
 };
 
 export default {
@@ -46,5 +47,9 @@ export default {
 
     ConfirmAccount(token) {
         return Api(baseURLSpring).post(ENDPOINTS.ENDPOINT_CONFIRM_ACCOUNT + '?token=' + token);
+    },
+
+    BookingsHistory() {
+        return Api(baseURLSpring).get(ENDPOINTS.ENDPOINT_BOOKINGS_HISTORY);
     }
 }

@@ -10,9 +10,9 @@
           </q-col>
           <q-grid class="column">
           <q-col cols="8" sm="8" class="row inline">
-            <q-chip v-if="filters_URL" v-for="filter in filters_URL" color="dark" text-color="orange" icon="bookmark">
+            <!-- <q-chip v-if="filters_URL" v-for="filter in filters_URL" color="dark" text-color="orange" icon="bookmark">
               {{ filter }}
-            </q-chip>
+            </q-chip> -->
           </q-col>
 
           <q-col cols="8" sm="8">
@@ -35,7 +35,7 @@
 
               </div>
               <div v-else>
-                Cargando datos...
+                <tableSkeleton />                 
               </div>
             </div>
           </q-col>
@@ -52,6 +52,7 @@
     import { reactive, computed, ref, watch } from 'vue';
     import { useTableFilters } from '../../composables/tables/useTable';
     import reservationModal from '../../components/reservation/reservationModal.vue';
+    import tableSkeleton from  '../../components/tables/tableSkeleton.vue';
 
     
     const route = useRoute();
@@ -120,8 +121,10 @@
       filters_URL.tableID = table.tableID;
       console.log(table);
       console.log(filters_URL);
-      
-      if (table.estado_reserva) {
+
+      if (!localStorage.getItem('token')) {
+        router.push({ name: 'login' });
+      } else if (table.estado_reserva) {
         console.log("Mesa no disponible");
       } else if (!table.meets_filters) {
         console.log("No cumple con los requisitos");

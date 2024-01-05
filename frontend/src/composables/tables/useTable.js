@@ -12,15 +12,15 @@ export const useTableFilters = async (filters) => {
     .catch(error => console.error(error))
     
     return tables;
-    const loadTables = async () => {
-        try {
-            const response = await tablesService.GetTables(filters);
-            console.log(response);
-            tables.value = response.data;
-        } catch (err) {
-            error.value = err.message;
-        }
-    }
+    // const loadTables = async () => {
+    //     try {
+    //         const response = await tablesService.GetTables(filters);
+    //         console.log(response);
+    //         tables.value = response.data;
+    //     } catch (err) {
+    //         error.value = err.message;
+    //     }
+    // }
     
-    return { tables, error, loadTables };
+    // return { tables, error, loadTables };
 };

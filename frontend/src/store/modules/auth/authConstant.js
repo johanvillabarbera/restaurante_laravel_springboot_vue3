@@ -10,4 +10,5 @@ export default {
     LOGIN_ADMIN: "Login_admin",
     LOGOUT: "Logout",
     CONFIRM_ACCOUNT: "Confirm_account",
+    BOOKINGS_HISTORY: "Bookings_history_user",
 }

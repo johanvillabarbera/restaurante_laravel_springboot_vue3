@@ -98,6 +98,19 @@ export const auth = {
             } catch (error) {
                 console.error(error);
             }
+        },
+
+        // Bookings history
+
+        [authConstant.BOOKINGS_HISTORY]: async (store) => {
+            try {
+                const response = await AuthService.BookingsHistory();
+                if (response.status === 200) {
+                    store.commit(authConstant.BOOKINGS_HISTORY, response.data);
+                }
+            } catch (error) {
+                console.error(error);
+            }
         }
 
     },//actions
@@ -162,6 +175,15 @@ export const auth = {
         //     }
         // }
 
+        // Bookings history
+
+        [authConstant.BOOKINGS_HISTORY]: (state, payload) => {
+            if (payload) {
+                state.bookings_history = payload;
+            }
+        }
+        
+
     },//mutations
     getters: {
         GetProfile: (state) => {
@@ -173,6 +195,9 @@ export const auth = {
         GetIsAdmin: (state) => {
             return state.isAdmin;
         },//GetIsAdmin
+        GetBookingsHistory: (state) => {
+            return state.bookings_history;
+        }
 
     }//getters
 }//export

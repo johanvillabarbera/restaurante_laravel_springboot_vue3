@@ -25,7 +25,7 @@
 
         <q-card-section class="q-pt-none">
             <div class="text-subtitle1">
-                {{ item.price  }}
+                {{ item.price  }} €
             </div>
             <div class="text-caption text-grey">
                 {{ item.description }}
