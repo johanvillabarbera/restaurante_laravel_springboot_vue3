@@ -19,5 +19,9 @@ public interface UserRepository extends JpaRepository<User, Long> {
     // Exists tlf
     @Query(value = "SELECT COUNT(*) FROM clients WHERE tlf = :tlf", nativeQuery = true)
     Integer existsByTlf(@Param("tlf") String tlf);
+
+    // Find by clientID
+    @Query(value = "SELECT * FROM clients WHERE client_id = :client_id", nativeQuery = true)
+    User findByClientID(@Param("client_id") Long client_id);
     
 }

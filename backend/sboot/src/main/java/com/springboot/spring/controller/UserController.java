@@ -54,6 +54,9 @@ import com.springboot.spring.repository.BookingRepository;
 import com.springboot.spring.model.BookingsUser;
 import com.springboot.spring.repository.BookingUserRepository;
 
+// FacturaScripts
+import com.springboot.spring.service.FacturaScriptsService;
+
 @CrossOrigin(origins = "http://bellidel.eu:8000")
 @RestController
 @RequestMapping("/user")
@@ -63,7 +66,7 @@ public class UserController {
     private static final Logger logger = LoggerFactory.getLogger(UserController.class);
 
     @Autowired
-    UserRepository userRepository;
+    private UserRepository userRepository;
 
     @Autowired
     private BlacklistTokenRepository BlacklistTokenRepository;
@@ -308,6 +311,15 @@ public class UserController {
             }
 
             UnverifiedUser unverifiedUser = unverifiedUserRepository.findByTmpToken(token).get();
+
+            // Damos de alta el usuario en FacturaScripts
+            // buscamos el usuario por el username
+            User user = userRepository.findByUsername(unverifiedUser.getUsername()).get();
+
+            FacturaScriptsService facturaScriptsService = new FacturaScriptsService();
+
+
+            facturaScriptsService.altaCliente("kKzltScRkTE5fqypOYBM", user.getClientID().toString(), user.getClientID().toString(), user.getName(), user.getSurname() , user.getEmail(), user.getTlf().toString(), user.getUsername());
 
             unverifiedUserRepository.delete(unverifiedUser);
 
