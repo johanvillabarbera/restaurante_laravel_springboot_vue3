@@ -46,6 +46,14 @@ import com.springboot.spring.model.email.EmailDataCreateUser;
 import java.text.SimpleDateFormat;
 import com.springboot.spring.service.GenerateTemporalToken;
 
+// BOOKINGS
+import com.springboot.spring.model.Booking;
+import com.springboot.spring.repository.BookingRepository;
+
+// BookingsUser
+import com.springboot.spring.model.BookingsUser;
+import com.springboot.spring.repository.BookingUserRepository;
+
 @CrossOrigin(origins = "http://bellidel.eu:8000")
 @RestController
 @RequestMapping("/user")
@@ -84,6 +92,14 @@ public class UserController {
     // EMAIL
     @Autowired
     private EmailService emailService;
+
+    // BOOKINGS
+    @Autowired
+    private BookingRepository bookingRepository;
+
+    // BOOKINGSUSER
+    @Autowired
+    private BookingUserRepository bookingUserRepository;
 
     @GetMapping("")
     public ResponseEntity<List<User>> getAllUsers() {
@@ -287,8 +303,6 @@ public class UserController {
     public ResponseEntity<?> confirmAccount(@RequestParam("token") String token) {
         try {
 
-            
-
             if (unverifiedUserRepository.existsByTmpToken(token) == 0) {
                 return new ResponseEntity<>(HttpStatus.NOT_FOUND);
             }
@@ -301,6 +315,27 @@ public class UserController {
         } catch (Exception e) {
             System.err.println(e);
             return new ResponseEntity<>("Activation_error",HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @GetMapping("/bookings_history")
+    public ResponseEntity<?> bookings_history(HttpServletRequest request){
+        try {
+            UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication()
+                .getPrincipal();
+            User user = userRepository.findByUsername(userDetails.getUsername()).get();
+
+
+            List<BookingsUser> bookingsUser = bookingUserRepository.findBookingByClientID(user.getClientID());
+
+            // if (bookingsUser.isEmpty()) {
+            //     return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            // }
+
+            return new ResponseEntity<>(bookingsUser, HttpStatus.OK);
+        } catch (Exception e) {
+            System.err.println(e);
+            return new ResponseEntity<>(e,HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
