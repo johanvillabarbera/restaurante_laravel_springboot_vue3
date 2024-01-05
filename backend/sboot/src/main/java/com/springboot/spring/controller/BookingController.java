@@ -44,6 +44,9 @@ import com.springboot.spring.model.email.EmailConfirmBooking;
 import com.springboot.spring.model.email.EmailDataConfirmBooking;
 import java.text.SimpleDateFormat;
 
+// FacturaScripts
+import com.springboot.spring.service.FacturaScriptsService;
+
 @CrossOrigin(origins = "http://bellidel.eu:8000")
 @RestController
 @RequestMapping("/booking")
@@ -142,6 +145,12 @@ public class BookingController {
 
             emailService.sendEmailConfirmBooking(email);
 
+            // CREAMOS LA FACTURA EN FS
+            User userFS = userRepository.findByUsername(userDetails.getUsername()).get();
+
+            FacturaScriptsService facturaScriptsService = new FacturaScriptsService();
+            Integer dinersNumber = booking.getDiners_number();
+            facturaScriptsService.crearFactura("kKzltScRkTE5fqypOYBM", userFS.getClientID().toString(), userFS.getClientID().toString(), userFS.getName(), userFS.getSurname(), booking.getBooking_day().toString(), booking.getTurnID().toString(), dinersNumber.toString(), booking.getMenuID().toString());
             return new ResponseEntity<>(null, HttpStatus.CREATED);
         } catch (Exception e) {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
