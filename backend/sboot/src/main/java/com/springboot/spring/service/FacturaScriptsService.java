@@ -53,7 +53,7 @@ public class FacturaScriptsService {
     }
 
     // FacturaScripts API 3 - Crear factura
-    public void crearFactura(String token, String codcliente, String cifnif, String nombre, String surname, String fecha, String turnoID, String comensales, String menuID) {
+    public void crearFactura(String token, String codcliente, String cifnif, String nombre, String surname, String fecha, String turnoID, String comensales, String menuID, String bookingID) {
         
         // Convertirmos la fecha para el formato de FacturaScripts
         String fechaFormateada = convertirFecha(fecha, "EEE MMM dd HH:mm:ss zzz yyyy", "dd-MM-yyyy");
@@ -72,6 +72,7 @@ public class FacturaScriptsService {
         map.add("nombrecliente", nombre + " " + surname);
         // map.add("fecha", fechaFormateada); // Se pone automaticamente desde FS al crear la factura, nuestra fecha del día de reserva se pone en descripción
         map.add("observaciones", observaciones);
+        map.add("idfactura", bookingID);
 
         HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(map, headers);
 

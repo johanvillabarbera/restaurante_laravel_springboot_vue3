@@ -101,6 +101,11 @@ const router = createRouter({
       name: "confirmAccount",
       component: () => import('../views/pages/ConfirmAccount.vue'),
       beforeEnter: authGuards.noAuthGuard, meta: { requiresAuth: true }
+    },
+    {
+      path: "/develop",
+      name: "develop",
+      component: () => import('../views/pages/Develop.vue'),
     }
   ]
 })
