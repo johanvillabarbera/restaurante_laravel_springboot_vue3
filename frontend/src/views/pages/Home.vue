@@ -36,10 +36,11 @@ import { ref } from 'vue';
 
     const redirectReservation = (menu) => {
             const filters = {
-                name: menu.name,
-                diners_number: 2,
-                booking_day: autoCalculateDate(),
-                turnID: 1
+                capacity: 2,
+                date: autoCalculateDate(),
+                turnID: 1,
+                turn: '12:00 - 14:00',
+                tableID: ''
             };
             const filters_ = btoa(JSON.stringify(filters));
             router.push({ name: "reservationFilters", params: { filters: filters_ } });
@@ -49,7 +50,7 @@ import { ref } from 'vue';
         const ONE_MORE_DAY = 1;
         const actualDate = new Date();
         actualDate.setDate(actualDate.getDate() + ONE_MORE_DAY)
-        return actualDate
+        return actualDate.toISOString().split('T')[0]
     }
 
     const images = ref([

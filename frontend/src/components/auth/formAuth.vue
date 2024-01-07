@@ -89,7 +89,7 @@ const submitForm = async () => {
   if (!state.username || !state.password) {
     $q.notify({
       type: 'negative',
-      message: 'Rellenga todos los campos'
+      message: 'Rellena todos los campos'
     });
     return false;
   } else if (state.password.length < 8 || !/[A-Z]/.test(state.password) || !/[a-z]/.test(state.password) || !/[0-9]/.test(state.password) || !/[!@#$%^&*]/.test(state.password)) {
@@ -126,17 +126,30 @@ const login = () => {
 }
 
 const checkRegister = () => {
+  var validRegexEmail = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
 
   if (!state.username, !state.password, !state.name, !state.email, !state.phone, !state.address, !state.birth_date) {
     $q.notify({
       type: 'negative',
-      message: 'Rellenga todos los campos'
+      message: 'Rellena todos los campos'
     });
     return false;
   } else if (state.password !== state.confirmPassword) {
     $q.notify({
       type: 'negative',
       message: 'Las contraseñas no coinciden'
+    });
+    return false;
+  } else if (!state.email.match(validRegexEmail)) {
+    $q.notify({
+      type: 'negative',
+      message: 'El formato del correo electrónico no es correcto'
+    });
+    return false;
+  } else if (state.phone.length != 9) {
+    $q.notify({
+      type: 'negative',
+      message: 'El teléfono debe contener 9 dígitos'
     });
     return false;
   }
