@@ -5,15 +5,18 @@
           {{ reserva.nombre }}
         </div>
         <div class="reserva-body">
-          <div class="reserva-info"><strong>Día:</strong> {{ reserva.bookingDay }}</div>
-          <div class="reserva-info"><strong>Menú:</strong> {{ reserva.name_menu }}</div>
-          <div class="reserva-info"><strong>Precio:</strong> {{ reserva.priceTotal }}</div>
-          <div class="reserva-info"><strong>Comensales:</strong> {{ reserva.dinersNumber }}</div>
+          <div class="reserva-info"><strong>Día:</strong> {{ reserva.booking.bookingDay }}</div>
+          <div class="reserva-info"><strong>Menú:</strong> {{ reserva.booking.name_menu }}</div>
+          <div class="reserva-info"><strong>Precio:</strong> {{ reserva.booking.priceTotal }}</div>
+          <div class="reserva-info"><strong>Comensales:</strong> {{ reserva.booking.dinersNumber }}</div>
           <div class="reserva-estado">
             <strong>Estado: </strong>
-            <span v-if="reserva.status == 0">Pendiente</span>
-            <span v-else-if="reserva.status == 1">Confirmada</span>
-            <span v-else-if="reserva.status == 2">Cancelada</span>
+            <span v-if="reserva.booking.status == 0" style="color: orangered">Pendiente</span>
+            <span v-else-if="reserva.booking.status == 1" style="color: green;">Confirmada</span>
+            <span v-else-if="reserva.booking.status == 2" style="color: red">Cancelada</span>
+          </div>
+          <div class="reserva-factura">
+            <a :href="reserva.facturas_pdf.pdf" :download="`Factura-Bellidel-${formatDate(reserva.booking.bookingDay)}.pdf`">Descargar Factura</a>
           </div>
         </div>
       </div>
@@ -36,13 +39,9 @@ const state = reactive({
     reservas: computed(() => store.getters['auth/GetBookingsHistory'])
 });
 
-
-
-  const reservas = [
-                { id: 1, nombre: 'Reserva 1', dia: 'Lunes', menu: 'Menú 1', precio: '$10', comensales: 2 },
-                { id: 2, nombre: 'Reserva 2', dia: 'Martes', menu: 'Menú 2', precio: '$15', comensales: 4 },
-                { id: 3, nombre: 'Reserva 3', dia: 'Miércoles', menu: 'Menú 3', precio: '$12', comensales: 3 }
-            ]
+const formatDate = (dateString) => {
+  return dateString.split('T')[0];
+}
 
 </script>
 <style scoped>
