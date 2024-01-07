@@ -56,6 +56,8 @@ import com.springboot.spring.repository.BookingUserRepository;
 
 // FacturaScripts
 import com.springboot.spring.service.FacturaScriptsService;
+import com.springboot.spring.model.Factura;
+import com.springboot.spring.model.ReservaConFactura;
 
 @CrossOrigin(origins = "http://bellidel.eu:8000")
 @RestController
@@ -337,14 +339,31 @@ public class UserController {
                 .getPrincipal();
             User user = userRepository.findByUsername(userDetails.getUsername()).get();
 
-
             List<BookingsUser> bookingsUser = bookingUserRepository.findBookingByClientID(user.getClientID());
 
-            // if (bookingsUser.isEmpty()) {
-            //     return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-            // }
+            FacturaScriptsService facturaScriptsService = new FacturaScriptsService();
+            List<Factura> facturas = facturaScriptsService.obtenerFacturas("viPf0OXqDgqqy7HHFiQY",user.getClientID().toString());
 
-            return new ResponseEntity<>(bookingsUser, HttpStatus.OK);
+            List<ReservaConFactura> combinedData = new ArrayList<>();
+
+            for (BookingsUser booking : bookingsUser) {
+
+                long bookingIdLong = booking.getBookingID();
+
+                if (bookingIdLong <= Integer.MAX_VALUE && bookingIdLong >= Integer.MIN_VALUE) {
+                    int bookingIdInt = (int) bookingIdLong;
+                    
+                    Factura matchingInvoice = facturas.stream()
+                        .filter(f -> f.getId() == bookingIdInt)
+                        .findFirst()
+                        .orElse(null);
+
+                    combinedData.add(new ReservaConFactura(booking, matchingInvoice));
+                }
+            }
+
+
+            return new ResponseEntity<>(combinedData, HttpStatus.OK);
         } catch (Exception e) {
             System.err.println(e);
             return new ResponseEntity<>(e,HttpStatus.INTERNAL_SERVER_ERROR);
