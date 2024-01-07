@@ -21,7 +21,12 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.core.JsonProcessingException;
 
-
+import org.springframework.web.client.RestClientException;
+import com.springboot.spring.model.Factura;
+import java.util.Arrays;
+import java.util.List;
+import java.util.ArrayList;
+import com.springboot.spring.model.RespuestaFsFacturasCli;
 
 @Service
 public class FacturaScriptsService {
@@ -123,6 +128,36 @@ public class FacturaScriptsService {
         logger.info("Línea de factura creada en FacturaScripts: " + response.getBody());
         
     }
+
+    // FacturaScripts API 3 - Obtener facturas (pdf) de un cliente
+    public List<Factura> obtenerFacturas(String token, String codcliente) {
+        RestTemplate restTemplate = new RestTemplate();
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+        headers.set("Token", token);
+
+        HttpEntity<String> request = new HttpEntity<>(headers);
+
+        String url = "http://bellidel.eu:8081/api/3/facturaspdf?idcliente=" + codcliente;
+
+        try {
+            ResponseEntity<RespuestaFsFacturasCli> response = restTemplate.exchange(
+                url, HttpMethod.GET, request, RespuestaFsFacturasCli.class);
+
+            logger.info("Facturas obtenidas de FacturaScripts");
+            if (response.getBody() != null) {
+                return response.getBody().getFacturas_pdf();
+            } else {
+                return new ArrayList<>();
+            }
+        } catch (RestClientException e) {
+            logger.error("Error al obtener facturas: " + e.getMessage());
+            throw e;
+        }
+    }
+
+
+
 
     // Facturascripts API 3 - Obtener información de un producto
     public String obtenerInfoProducto(String token, String idproducto) {

@@ -35,8 +35,6 @@ public class BookingsUser {
     @Column(name = "price_total")
     private double priceTotal;
 
-    // @Column(name = "menuID")
-    // private Long menu;
 
     @Column(name = "turn_hour")
     private String turn_hour;
@@ -44,6 +42,4 @@ public class BookingsUser {
     @Column(name = "name_menu")
     private String name_menu;
 
-    // @Column(name = "clientID")
-    // private Long client;
 }
