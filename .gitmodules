@@ -1,0 +1,3 @@
+[submodule "microservicios"]
+	path = microservicios
+	url = https://github.com/miguelvidalbellido/desarrollo_microservicios.git

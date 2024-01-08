@@ -5,7 +5,7 @@
           {{ reserva.nombre }}
         </div>
         <div class="reserva-body">
-          <div class="reserva-info"><strong>Día:</strong> {{ reserva.booking.bookingDay }}</div>
+          <div class="reserva-info"><strong>Día:</strong> {{ formatDate(reserva.booking.bookingDay) }}</div>
           <div class="reserva-info"><strong>Menú:</strong> {{ reserva.booking.name_menu }}</div>
           <div class="reserva-info"><strong>Precio:</strong> {{ reserva.booking.priceTotal }}</div>
           <div class="reserva-info"><strong>Comensales:</strong> {{ reserva.booking.dinersNumber }}</div>
@@ -14,6 +14,9 @@
             <span v-if="reserva.booking.status == 0" style="color: orangered">Pendiente</span>
             <span v-else-if="reserva.booking.status == 1" style="color: green;">Confirmada</span>
             <span v-else-if="reserva.booking.status == 2" style="color: red">Cancelada</span>
+          </div>
+          <div class="reserva-cancelar">
+            <button v-if="reserva.booking.status == 0" @click="cancelarReserva(reserva.booking.id)">Cancelar</button>
           </div>
           <div class="reserva-factura">
             <a :href="reserva.facturas_pdf.pdf" :download="`Factura-Bellidel-${formatDate(reserva.booking.bookingDay)}.pdf`">Descargar Factura</a>
@@ -48,45 +51,62 @@ const formatDate = (dateString) => {
 .reserva-container {
   display: flex;
   flex-wrap: wrap;
-  justify-content: space-between;
-  gap: 10px;
-}
-
-.reserva-header {
-    font-size: 18px;
-    font-weight: bold;
-    margin-bottom: 10px;
-    color: orangered;
+  gap: 20px;
+  justify-content: center;
 }
 
 .reserva-card {
-  background-color: #f5f5f5;
-  padding: 15px;
-  border-radius: 8px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
-  width: calc(50% - 30px); /* Ajuste para el espacio entre tarjetas */
-  margin-top: 10px;
-  margin-left: 10px;
-  margin-right: 10px;
+  background-color: white;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+  width: 45%;
+  transition: transform 0.3s ease;
+}
+
+.reserva-card:hover {
+  transform: translateY(-5px);
 }
 
 .reserva-header {
-  font-size: 18px;
-  font-weight: bold;
-  margin-bottom: 10px;
+  font-size: 20px;
+  color: #333;
+  margin-bottom: 15px;
+  font-weight: 500;
 }
 
 .reserva-body {
-  font-size: 14px;
+  font-size: 16px;
+  color: #555;
 }
 
 .reserva-info {
-  margin-bottom: 5px;
-  color: #555;
+  margin-bottom: 10px;
 }
 
-.reserva-estado{
-  margin-bottom: 5px;
-  color: #555;
+.reserva-estado {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 500;
+}
+
+.reserva-cancelar button {
+  background-color: #ff5f57;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  padding: 10px 15px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.reserva-cancelar button:hover {
+  background-color: #e0483e;
+}
+
+.reserva-factura a {
+  color: #007bff;
+  text-decoration: none;
 }
 </style>

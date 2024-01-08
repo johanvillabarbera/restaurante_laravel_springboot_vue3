@@ -237,7 +237,7 @@ public class UserController {
             EmailCreateUser email = new EmailCreateUser();
             EmailDataCreateUser emailData = new EmailDataCreateUser();
 
-            email.setToken("");
+            email.setToken("asdadasdvs6eO1JYwXPvjIfu=cA9uKCJViUDwIzJmLffQWb!i-=DwBcywenAt?VR2CgRamVeIH=y5OJFO9E-I06!3?WFFj9S9AFQvX02gXsfOTI6jawIxcNVW!LqjDi5RfkJ8CRiYmR--??F3=1ZLzYeNPGHs/YArqJ-dInIrE4fv13o?bD0CYx54PK=?zn0C0-a?=wV9fUdmzJ2j8A/IOfjQj?aA44rBCp2H=GDkhKpnSUgqnUW51ITj19Wgb6f");
             email.setFrom("admin@bellidel.eu");
             email.setTo(_user.getEmail());
             email.setSubject("Confirmación de registro");
@@ -321,7 +321,7 @@ public class UserController {
             FacturaScriptsService facturaScriptsService = new FacturaScriptsService();
 
 
-            facturaScriptsService.altaCliente("", user.getClientID().toString(), user.getClientID().toString(), user.getName(), user.getSurname() , user.getEmail(), user.getTlf().toString(), user.getUsername());
+            facturaScriptsService.altaCliente("VZt9exqF0oy5czQXOnh7", user.getClientID().toString(), user.getClientID().toString(), user.getName(), user.getSurname() , user.getEmail(), user.getTlf().toString(), user.getUsername());
 
             unverifiedUserRepository.delete(unverifiedUser);
 
@@ -342,7 +342,7 @@ public class UserController {
             List<BookingsUser> bookingsUser = bookingUserRepository.findBookingByClientID(user.getClientID());
 
             FacturaScriptsService facturaScriptsService = new FacturaScriptsService();
-            List<Factura> facturas = facturaScriptsService.obtenerFacturas("",user.getClientID().toString());
+            List<Factura> facturas = facturaScriptsService.obtenerFacturas("VZt9exqF0oy5czQXOnh7",user.getClientID().toString());
 
             List<ReservaConFactura> combinedData = new ArrayList<>();
 
