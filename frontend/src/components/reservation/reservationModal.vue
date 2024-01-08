@@ -29,9 +29,12 @@
     import { defineProps, getCurrentInstance, ref, computed, reactive, watch } from 'vue'
     import { useStore } from 'vuex';
     import clientConstant from '../../store/modules/client/clientConstant';
+    import { useRouter } from 'vue-router';
+    import { useQuasar } from 'quasar'
 
-
+    const router = useRouter();
     const store = useStore();
+    const q = useQuasar();
 
     let props = defineProps(['model','filters'])
     const emit = defineEmits(['close']);
@@ -54,6 +57,11 @@
         localFilters.diners_number = localFilters.capacity;
         console.log(localFilters);
         store.dispatch(`reservation/${clientConstant.CREATE_RESERVATION}`, localFilters);
+        router.push({ name: "home" });
+        q.notify({
+          message: 'Se ha realizado la reserva',
+          color: 'green'
+    })
     }
 
     store.dispatch(`menu/${clientConstant.INITIALIZE_MENU}`);
