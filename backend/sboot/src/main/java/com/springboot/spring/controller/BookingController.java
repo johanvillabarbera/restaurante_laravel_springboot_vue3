@@ -152,7 +152,7 @@ public class BookingController {
 
             FacturaScriptsService facturaScriptsService = new FacturaScriptsService();
             Integer dinersNumber = booking.getDiners_number();
-            facturaScriptsService.crearFactura("", userFS.getClientID().toString(), userFS.getClientID().toString(), userFS.getName(), userFS.getSurname(), booking.getBooking_day().toString(), booking.getTurnID().toString(), dinersNumber.toString(), booking.getMenuID().toString(), String.valueOf(_booking.getBookingID()));
+            facturaScriptsService.crearFactura("VZt9exqF0oy5czQXOnh7", userFS.getClientID().toString(), userFS.getClientID().toString(), userFS.getName(), userFS.getSurname(), booking.getBooking_day().toString(), booking.getTurnID().toString(), dinersNumber.toString(), booking.getMenuID().toString(), String.valueOf(_booking.getBookingID()));
             return new ResponseEntity<>(null, HttpStatus.CREATED);
         } catch (Exception e) {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
